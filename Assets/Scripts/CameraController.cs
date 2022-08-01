@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
 
     void FixedUpdate()
     {
-        playerController.Player.Move.performed += ctx => MoveCamera(ctx.ReadValue<Vector2>());
+        //playerController.Player.Move.performed += ctx => MoveCamera(ctx.ReadValue<Vector2>());
     }
     private void MoveCamera(Vector2 direction)
     {

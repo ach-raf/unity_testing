@@ -723,9 +723,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b7dbe2c329927e4d95f1ab9993d2c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory_scriptable_object: {fileID: 11400000, guid: 9d3dacf2914423e49bccad3e0130d7a3, type: 2}
+  player: {fileID: 588483989}
+  building_info_panel: {fileID: 6081376382514788993}
   inventory_panel: {fileID: 1418868088}
   item_slot_prefab: {fileID: 845566387095215588, guid: 6a8a073232e72d743a6e76db83cca6b5, type: 3}
+  building_info: {fileID: 6081376381918824106}
   items_objects:
   - {fileID: 11400000, guid: 7b162f242e62c754cbb158754855111e, type: 2}
   - {fileID: 11400000, guid: 5485f463a7ec8cb4bb088cfcd5b141d6, type: 2}
@@ -2092,6 +2094,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BuildingInfo
       objectReference: {fileID: 0}
+    - target: {fileID: 6991535820802911097, guid: 9860d49c335729744a52b403c8ab13f2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6991535820802911102, guid: 9860d49c335729744a52b403c8ab13f2, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2176,8 +2182,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6991535821549918034, guid: 9860d49c335729744a52b403c8ab13f2, type: 3}
+      propertyPath: m_Name
+      value: BuildingContent
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9860d49c335729744a52b403c8ab13f2, type: 3}
+--- !u!1 &6081376381918824106 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6991535821549918034, guid: 9860d49c335729744a52b403c8ab13f2, type: 3}
+  m_PrefabInstance: {fileID: 3847076081410380280}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6081376382514788993 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6991535820802911097, guid: 9860d49c335729744a52b403c8ab13f2, type: 3}
+  m_PrefabInstance: {fileID: 3847076081410380280}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6081376382514788998 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6991535820802911102, guid: 9860d49c335729744a52b403c8ab13f2, type: 3}

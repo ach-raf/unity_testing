@@ -10,5 +10,8 @@ public static class EventManager
     public static event Action<BuildingScriptableObject> InventoryItemClicked;
     public static void OnInventoryItemClicked(BuildingScriptableObject item_scriptable_object) => InventoryItemClicked?.Invoke(item_scriptable_object);
 
+    public static event Action<Buildable> BuildableClicked;
+    public static void OnBuildableClicked(Buildable buildable_component) => BuildableClicked?.Invoke(buildable_component);
+
 
 }

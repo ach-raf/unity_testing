@@ -101,6 +101,10 @@ public class BuildingScriptableObject : ItemScriptableObject
         building_object.SetBuildingData(_pos, width, height, inventory);
         GameObject spawn_building = Instantiate(building_object.prefab, building_object.transform_position, Quaternion.identity);
     }
+    public Inventory GetInventory()
+    {
+        return inventory;
+    }
 
 
 

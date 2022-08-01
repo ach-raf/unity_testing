@@ -5,29 +5,33 @@ using UnityEngine.UI;
 
 public class InventoryManagerUI : MonoBehaviour
 {
-    [SerializeField] public InventoryScriptableObject inventory_scriptable_object;
+    //[SerializeField] public InventoryScriptableObject inventory_scriptable_object;
+    [SerializeField] public GameObject player;
+    [SerializeField] public GameObject building_info_panel;
     [SerializeField] public GameObject inventory_panel;
     [SerializeField] public GameObject item_slot_prefab;
+    [SerializeField] public GameObject building_info;
     public BuildingScriptableObject[] items_objects;
     private Button item_button;
-
-
-
+    private Player player_component;
 
 
     void OnEnable()
     {
         EventManager.InventoryItemAdded += RefreshInventory;
+        EventManager.BuildableClicked += BuildableClicked;
 
     }
     void OnDisable()
     {
         EventManager.InventoryItemAdded -= RefreshInventory;
+        EventManager.BuildableClicked -= BuildableClicked;
 
     }
     private void Awake()
     {
-        inventory_scriptable_object.buildings_inventory = new Inventory();
+        player_component = player.GetComponent<Player>();
+        player_component.SetInventory(new Inventory());
     }
     // Start is called before the first frame update
     void Start()
@@ -61,7 +65,7 @@ public class InventoryManagerUI : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        foreach (BuildingScriptableObject item_scriptable_object in inventory_scriptable_object.buildings_inventory.GetItems())
+        foreach (BuildingScriptableObject item_scriptable_object in player_component.GetInventory().GetItems())
         {
             AddItem(item_scriptable_object);
         }
@@ -89,15 +93,34 @@ public class InventoryManagerUI : MonoBehaviour
     }
     public BuildingScriptableObject GetItemInfo()
     {
-        Debug.Log(inventory_panel.transform.GetComponent<Item>().ItemScriptableObject.name);
-        return inventory_panel.transform.GetComponent<Item>().ItemScriptableObject;
+        Debug.Log(inventory_panel.transform.GetComponent<BuildingScriptableObject>().name);
+        return inventory_panel.transform.GetComponent<BuildingScriptableObject>();
     }
     public void PrePopulateInventory()
     {
         foreach (BuildingScriptableObject item_scriptable_object in items_objects)
         {
-            inventory_scriptable_object.buildings_inventory.AddItem(item_scriptable_object);
+            player_component.GetInventory().AddItem(item_scriptable_object);
 
+        }
+    }
+
+    public void BuildableClicked(Buildable buildable)
+    {
+        buildable.GetBuildingData().GetInventory().AddItem(buildable.GetBuildingData());
+        Debug.Log("Buildable clicked From UI manager");
+        building_info_panel.SetActive(true);
+        //building_info.GetComponent<BuildingScriptableObject>()..SetBuildingData(buildable.GetBuildingData());
+
+        foreach (Transform child in building_info.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (BuildingScriptableObject item_scriptable_object in buildable.GetBuildingData().GetInventory().GetItems())
+        {
+            GameObject item_slot = Instantiate(item_slot_prefab, building_info.transform);
+            item_slot.GetComponent<Item>().ItemScriptableObject = item_scriptable_object;
+            item_slot.GetComponent<Item>().SetItem();
         }
     }
 

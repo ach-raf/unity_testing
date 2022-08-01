@@ -63,6 +63,12 @@ public class BuildingManager : MonoBehaviour
             if (clicked_object != null)
             {
                 clicked_object.SetColor(Color.red);
+                if (clicked_object.GetGameObject().GetComponent<Buildable>())
+                {
+                    Buildable buildable_component = clicked_object.GetGameObject().GetComponent<Buildable>();
+                    buildable_component.click();
+
+                }
                 //Debug.Log(string.Format("ClickedObject get transform position, {0}", clicked_object.GetTransform().position));
                 InstantiateBuilding(clicked_object);
 

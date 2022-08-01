@@ -43,6 +43,8 @@ public class Buildable : Cuby, IClickable, IDestoryable
     public new void click()
     {
         Debug.Log($"{building_data.name} clicked");
+        Debug.Log("Click from buildable");
+        EventManager.OnBuildableClicked(this);
     }
     public new void right_click()
     {
@@ -63,6 +65,7 @@ public class Buildable : Cuby, IClickable, IDestoryable
         Destroy(_instantiated_panel);
 
     }
+
 
 
 
