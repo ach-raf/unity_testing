@@ -9,11 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 703a75ac52b503b48b6bd730d67b6a2f, type: 3}
-  m_Name: building1
+  m_Script: {fileID: 11500000, guid: 2567332f76f02084bbedae88d1258d38, type: 3}
+  m_Name: House2
   m_EditorClassIdentifier: 
   id: 0
-  name: Excalibur
-  prefab: {fileID: 7407792412616753667, guid: 9fdfbdb679b77fa4db10b4cc9b4a4a70, type: 3}
+  name: House 2
+  prefab: {fileID: 2884585343781280986, guid: ae83e8d078c80b148a0ac8cdd93cec0b, type: 3}
   ItemImage: {fileID: 21300000, guid: b0d655bb5f460604cbf510c8849201b2, type: 3}
   quantity: 1
+  cell_size: 5
+  offset: {x: -2.5, y: 2.5, z: 2.5}
+  id_building: 0
+  width: 3
+  height: 3
+  position: {x: 0, y: 0, z: 0}
+  transform_position: {x: 0, y: 0, z: 0}
+  ressource_type: 0

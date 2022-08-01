@@ -5,22 +5,22 @@ using System;
 
 
 [CreateAssetMenu(fileName = "Building ScriptableObject", menuName = "Building/Building ScriptableObject", order = 1)]
-public class BuildingScriptableObject : ScriptableObject
+public class BuildingScriptableObject : ItemScriptableObject
 {
-    public GameObject game_object;
-    private float click_error_tolerance = 1.5f;
 
     public float cell_size = 5;
-    public Vector3 offset;
-    public static int id_counter = 0;
-    public int id_building;
     public int width;
     public int height;
+    public Vector3 offset;
+    private Inventory inventory;
+    public static int id_counter = 0;
+    public int id_building;
 
     public Vector3 position;
     public Vector3 transform_position;
     public RessourceType ressource_type = RessourceType.None;
 
+    private float click_error_tolerance = 1.5f;
     public enum RessourceType
     {
         None,
@@ -28,12 +28,13 @@ public class BuildingScriptableObject : ScriptableObject
         Premium
     }
 
-    public void SetBuildingData(Vector3 _position, int _width, int _height, RessourceType _ressource_type = RessourceType.None)
+    public void SetBuildingData(Vector3 _position, int _width, int _height, Inventory _inventory, RessourceType _ressource_type = RessourceType.None)
     {
 
         this.id_building = id_counter;
         this.width = _width;
         this.height = _height;
+        this.inventory = _inventory;
         this.transform_position = CalculateOffsetPosition(_position);
         this.position = new Vector3(_position.x, _position.y + 1, _position.z);
         this.name = $"({position.x}, {position.y}, {position.z})";
@@ -97,8 +98,8 @@ public class BuildingScriptableObject : ScriptableObject
 
         BuildingScriptableObject building_object = ScriptableObject.Instantiate(this);
         Vector3 _pos = clicked_object.GetTransform().position;
-        building_object.SetBuildingData(_pos, width, height);
-        GameObject spawn_building = Instantiate(building_object.game_object, building_object.transform_position, Quaternion.identity);
+        building_object.SetBuildingData(_pos, width, height, inventory);
+        GameObject spawn_building = Instantiate(building_object.prefab, building_object.transform_position, Quaternion.identity);
     }
 
 

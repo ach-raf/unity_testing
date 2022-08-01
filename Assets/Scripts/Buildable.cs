@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Buildable : MonoBehaviour, IClickable, IDestoryable
+public class Buildable : Cuby, IClickable, IDestoryable
 {
-    //[SerializeField] public GameObject panel;
     private GameObject _instantiated_panel;
     private bool _panel_state = true;
 
@@ -19,15 +18,7 @@ public class Buildable : MonoBehaviour, IClickable, IDestoryable
 
     }
 
-    public Transform GetTransform()
-    {
-        return this.transform;
-    }
 
-    public void SetColor(Color _color)
-    {
-        mesh_renderer.material.color = _color;
-    }
     public void SetMaterial(Material _material)
     {
         mesh_renderer.material = _material;
@@ -49,11 +40,11 @@ public class Buildable : MonoBehaviour, IClickable, IDestoryable
         return building_data;
     }
 
-    public void click()
+    public new void click()
     {
         Debug.Log($"{building_data.name} clicked");
     }
-    public void right_click()
+    public new void right_click()
     {
         Debug.Log($"{building_data.name} right clicked");
         _instantiated_panel.SetActive(_panel_state);
@@ -72,10 +63,7 @@ public class Buildable : MonoBehaviour, IClickable, IDestoryable
         Destroy(_instantiated_panel);
 
     }
-    public GameObject GetGameObject()
-    {
-        return gameObject;
-    }
+
 
 
 }

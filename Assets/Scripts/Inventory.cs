@@ -17,6 +17,7 @@ public class Inventory
     public void AddItem(ItemScriptableObject item)
     {
         items.Add(item);
+        EventManager.OnInventoryItemAdded();
     }
     public void RemoveItem(ItemScriptableObject item)
     {

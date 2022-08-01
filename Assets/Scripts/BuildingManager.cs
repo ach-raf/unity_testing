@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class GameManager : MonoBehaviour
+public class BuildingManager : MonoBehaviour
 {
-    public BuildingScriptableObject[] building_objects;
-    public ItemScriptableObject[] items_objects;
+    //public BuildingScriptableObject[] building_objects;
 
-    [SerializeField] public GameObject canvas;
-    [SerializeField] public InventoryScriptableObject inventory_scriptable_object;
-    [SerializeField] public GameObject inventory_panel;
-    [SerializeField] public Camera current_camera;
     [SerializeField] LayerMask ground_mask;
+
     [SerializeField] GameObject buildings_holder;
 
     public PlayerControlls playerControlls;
@@ -20,58 +16,44 @@ public class GameManager : MonoBehaviour
     public BuildingScriptableObject selected_building_object;
     public Material preview_material;
     private GameObject preview_object = null;
-    private static int inventory_state = 0;
-    private static int selected_building_index = 0;
 
 
     private void Awake()
     {
         playerControlls = new PlayerControlls();
-        inventory_scriptable_object.buildings_inventory = new Inventory();
     }
 
     private void OnEnable()
     {
         playerControlls.Enable();
+        EventManager.InventoryItemClicked += InventoryItemClicked;
+
 
     }
     private void OnDisable()
     {
         playerControlls.Disable();
+        EventManager.InventoryItemClicked -= InventoryItemClicked;
+
     }
 
 
     // Update is called once per frame
     void LateUpdate()
     {
-        if (preview_object)
-        {
-            Vector3 preview_position = new Vector3(MouseOperations.GroundMousePosition(current_camera, ground_mask).point.x, MouseOperations.GroundMousePosition(current_camera, ground_mask).point.y, MouseOperations.GroundMousePosition(current_camera, ground_mask).point.z);
-            preview_object.transform.position = preview_position;
-        }
         if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }
-        if (playerControlls.Player.OpenInventory.triggered)
+        if (preview_object)
         {
-            if (inventory_state % 2 == 0)
-            {
-                inventory_panel.SetActive(true);
-                inventory_state++;
-            }
-            else
-            {
-                inventory_panel.SetActive(false);
-                inventory_state++;
-            }
+            preview_object.transform.position = MouseOperations.GroundMousePosition(ground_mask).point;
+
         }
         if (playerControlls.Player.Fire.triggered)
         {
             Debug.Log("Fire");
-            inventory_scriptable_object.buildings_inventory.AddItem(items_objects[0]);
-            inventory_scriptable_object.buildings_inventory.AddItem(items_objects[1]);
-            EventManager.OnInventoryItemAdded();
+
             /*mouseHit = CastRay();
             if (mouseHit.collider != null)
             {
@@ -103,7 +85,7 @@ public class GameManager : MonoBehaviour
         if (playerControlls.Player.Interact.triggered)
         {
             Debug.Log("Interact");
-            button_click();
+            //button_click();
             IClickable clicked_object = MouseOperations.GetClickedObject();
             if (clicked_object != null)
             {
@@ -112,24 +94,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /*void InstantiateBuilding(IClickable clicked_object)
+    void preview_building(Vector3 preview_postion = default(Vector3))
     {
-
-        BuildingScriptableObject building_object = ScriptableObject.Instantiate(selected_building_object);
-        building_object.SetBuildingData(clicked_object.GetTransform().position, building_object.width, building_object.height);
-        building_object.game_object = Instantiate(building_object.game_object, building_object.transform_position, Quaternion.identity);
-        //building_object.game_object.GetComponent<Buildable>().SetBuildingData(building_object);
-
-    }*/
-    void preview_building()
-    {
-        Debug.Log(MouseOperations.GroundMousePosition(current_camera, ground_mask).point);
-        preview_object = Instantiate(selected_building_object.game_object, MouseOperations.GroundMousePosition(current_camera, ground_mask).point, Quaternion.identity);
-        preview_object.GetComponentInChildren<Buildable>().SetMaterial(preview_material);
-
-
-
-
+        if (preview_object)
+        {
+            Destroy(preview_object);
+        }
+        if (preview_postion == default(Vector3))
+        {
+            preview_postion = MouseOperations.GroundMousePosition(ground_mask).point;
+            preview_postion.y = 5;
+        }
+        preview_object = Instantiate(selected_building_object.prefab, preview_postion, Quaternion.identity);
+        preview_object.GetComponentInChildren<Renderer>().material = preview_material;
     }
     void BuildableDestoryed(Buildable buildable_object)
     {
@@ -193,12 +170,12 @@ public class GameManager : MonoBehaviour
             }
             if (can_build)
             {
-                building_ScriptableObject.SetBuildingData(pos, building_ScriptableObject.width, building_ScriptableObject.height);
-                building_ScriptableObject.game_object = Instantiate(building_ScriptableObject.game_object, building_ScriptableObject.transform_position, Quaternion.identity);
-                building_ScriptableObject.game_object.transform.SetParent(buildings_holder.transform);
-                building_ScriptableObject.game_object.GetComponentInChildren<Buildable>().SetBuildingData(building_ScriptableObject);
+                building_ScriptableObject.SetBuildingData(pos, building_ScriptableObject.width, building_ScriptableObject.height, new Inventory());
+                building_ScriptableObject.prefab = Instantiate(building_ScriptableObject.prefab, building_ScriptableObject.transform_position, Quaternion.identity);
+                building_ScriptableObject.prefab.transform.SetParent(buildings_holder.transform);
+                building_ScriptableObject.prefab.GetComponentInChildren<Buildable>().SetBuildingData(building_ScriptableObject);
 
-                //building_ScriptableObject.game_object.GetComponent<Buildable>().SetUpPanel(canvas, current_camera);
+                //building_ScriptableObject.prefab.GetComponent<Buildable>().SetUpPanel(canvas, current_camera);
 
                 foreach (var item in _list)
                 {
@@ -221,21 +198,13 @@ public class GameManager : MonoBehaviour
             //preview_object.GetComponent<Buildable>().DestroyPanel();
             Destroy(preview_object);
             preview_object = null;
-
-
         }
-
     }
-    public void button_click()
+    public void InventoryItemClicked(BuildingScriptableObject item_scriptable_object)
     {
-        //DestroyPreview();
-        if (selected_building_index >= building_objects.Length)
-        {
-            selected_building_index = 0;
-        }
-        selected_building_object = building_objects[selected_building_index];
+        selected_building_object = item_scriptable_object;
         preview_building();
-        selected_building_index++;
     }
+
 
 }

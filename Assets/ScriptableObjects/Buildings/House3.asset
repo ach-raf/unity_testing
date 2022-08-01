@@ -10,14 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2567332f76f02084bbedae88d1258d38, type: 3}
-  m_Name: BarnSO
+  m_Name: House3
   m_EditorClassIdentifier: 
-  game_object: {fileID: 1958507339847624297, guid: d60bc873f058be347ab387aa34543217, type: 3}
+  id: 0
+  name: House 3
+  prefab: {fileID: 7298603014349324009, guid: f2512b0611b042c4283ffdb5aa82daaf, type: 3}
+  ItemImage: {fileID: 21300000, guid: fea5b4376ce77dc479e27027523d35e5, type: 3}
+  quantity: 1
   cell_size: 5
-  offset: {x: 0, y: 2.5, z: 0}
+  height: 3
+  width: 5
+  offset: {x: -2.5, y: 2.5, z: 2.5}
   id_building: 0
-  width: 4
-  height: 4
   position: {x: 0, y: 0, z: 0}
   transform_position: {x: 0, y: 0, z: 0}
   ressource_type: 0

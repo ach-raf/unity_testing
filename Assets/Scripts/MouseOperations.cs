@@ -83,7 +83,7 @@ public static class MouseOperations
             return null;
         }
     }
-    public static RaycastHit GroundMousePosition(Camera current_camera, LayerMask ground_mask)
+    public static RaycastHit GroundMousePosition(LayerMask ground_mask)
     {
         Vector3 mousePosFar = Mouse.current.position.ReadValue();
         mousePosFar.z = Camera.main.farClipPlane;
@@ -94,7 +94,7 @@ public static class MouseOperations
         Vector3 WorldPosFar = Camera.main.ScreenToWorldPoint(mousePosFar);
         Vector3 WorldPosNear = Camera.main.ScreenToWorldPoint(mousePosNear);
 
-        Ray ray = current_camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit ground_ray_hit, float.MaxValue, ground_mask))
         {
 
