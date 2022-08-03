@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   name: House 3
-  prefab: {fileID: 7298603014349324009, guid: f2512b0611b042c4283ffdb5aa82daaf, type: 3}
-  ItemImage: {fileID: 21300000, guid: fea5b4376ce77dc479e27027523d35e5, type: 3}
+  gameObject: {fileID: 7298603014349324009, guid: f2512b0611b042c4283ffdb5aa82daaf, type: 3}
+  ItemImage: {fileID: 21300000, guid: 3925ad0758dd069488688a43f63acaa1, type: 3}
   quantity: 1
   cell_size: 5
-  height: 3
   width: 5
+  height: 3
   offset: {x: -2.5, y: 2.5, z: 2.5}
   id_building: 0
   position: {x: 0, y: 0, z: 0}

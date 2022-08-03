@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   game_object: {fileID: 3201189558339663559, guid: 6b02b6a99015d06458b813e771f1d1f5, type: 3}
   original_color: {r: 0, g: 0, b: 0, a: 0}
+  original_material: {fileID: 2100000, guid: be601904453023549812e08838af2ed7, type: 2}
   width: 1
   height: 1
   cell_size: 5

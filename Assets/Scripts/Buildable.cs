@@ -28,7 +28,7 @@ public class Buildable : Cuby, IClickable, IDestoryable
     {
         //EventManager.OnBuildableDestroy(this);
         //DestroyPanel();
-        Destroy(gameObject);
+        gameObject.transform.parent.gameObject.SetActive(false);
     }
 
     public void SetBuildingData(BuildingScriptableObject _building_data)
@@ -42,7 +42,6 @@ public class Buildable : Cuby, IClickable, IDestoryable
 
     public new void click()
     {
-        Debug.Log($"{building_data.name} clicked");
         Debug.Log("Click from buildable");
         EventManager.OnBuildableClicked(this);
     }
@@ -65,7 +64,14 @@ public class Buildable : Cuby, IClickable, IDestoryable
         Destroy(_instantiated_panel);
 
     }
-
+    public void DestroyBuilding(GridSystemScriptableObject grid_object)
+    {
+        for (int i = 0; i < transform.parent.transform.childCount; i++)
+        {
+            Destroy(transform.parent.transform.GetChild(i).gameObject);
+        }
+        building_data.DestroyBuilding(grid_object);
+    }
 
 
 

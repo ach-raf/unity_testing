@@ -7,6 +7,7 @@ public class UiManager : MonoBehaviour
 {
     [SerializeField] public GameObject canvas;
     [SerializeField] public GameObject inventory_panel;
+    [SerializeField] public GameObject building_info_panel;
     private PlayerControlls playerControlls;
     private static int inventory_state = 0;
 
@@ -35,6 +36,11 @@ public class UiManager : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        if (playerControlls.Player.CloseBuildingInfo.triggered)
+        {
+            building_info_panel.SetActive(false);
+        }
+
         if (playerControlls.Player.OpenInventory.triggered)
         {
             if (inventory_state % 2 == 0)

@@ -7,7 +7,7 @@ public class ItemScriptableObject : ScriptableObject
 {
     public int id;
     public new string name;
-    public GameObject prefab;
+    public GameObject gameObject;
     public Sprite ItemImage;
     public int quantity;
     //private int max_quantity;

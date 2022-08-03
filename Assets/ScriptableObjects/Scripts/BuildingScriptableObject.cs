@@ -99,11 +99,44 @@ public class BuildingScriptableObject : ItemScriptableObject
         BuildingScriptableObject building_object = ScriptableObject.Instantiate(this);
         Vector3 _pos = clicked_object.GetTransform().position;
         building_object.SetBuildingData(_pos, width, height, inventory);
-        GameObject spawn_building = Instantiate(building_object.prefab, building_object.transform_position, Quaternion.identity);
+        GameObject spawn_building = Instantiate(building_object.gameObject, building_object.transform_position, Quaternion.identity);
     }
     public Inventory GetInventory()
     {
         return inventory;
+    }
+    public List<(int, int)> Buildable_list(Vector3 starting_position, GridSystemScriptableObject grid_object)
+    {
+
+        List<(int, int)> result = new List<(int, int)>();
+        List<(int, int)> _list = GetBuildingAreaList(starting_position);
+        for (int i = 0; i < _list.Count; i += 1)
+        {
+            GridObject spawn_tile = grid_object.grid_system_object.GetGridObject(_list[i].Item1, _list[i].Item2);
+            if (spawn_tile.GetOccupied())
+            {
+                return null;
+            }
+            else
+            {
+                result.Add((_list[i].Item1, _list[i].Item2));
+            }
+        }
+
+        return result;
+    }
+
+    public void DestroyBuilding(GridSystemScriptableObject grid_object)
+    {
+
+        List<(int, int)> _list = GetBuildingAreaList(position);
+        for (int i = 0; i < _list.Count; i += 1)
+        {
+            GridObject tile = grid_object.grid_system_object.GetGridObject(_list[i].Item1, _list[i].Item2);
+            tile.EmptyTileObject();
+            grid_object.grid_system_object.SetValue(tile.GetPosition(), tile);
+        }
+
     }
 
 

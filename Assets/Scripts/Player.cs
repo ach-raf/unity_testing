@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private Inventory inventory;
+    private Inventory buildings_inventory;
+    private Inventory ressources_inventory;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,12 +17,21 @@ public class Player : MonoBehaviour
     {
 
     }
-    public void SetInventory(Inventory _inventory)
+    public void SetBuildingsInventory(Inventory _inventory)
     {
-        inventory = _inventory;
+        buildings_inventory = _inventory;
     }
-    public Inventory GetInventory()
+    public Inventory GetBuildingsInventory()
     {
-        return inventory;
+        return buildings_inventory;
+    }
+
+    public void SetRessourcesInventory(Inventory _inventory)
+    {
+        ressources_inventory = _inventory;
+    }
+    public Inventory GetRessourcesInventory()
+    {
+        return ressources_inventory;
     }
 }

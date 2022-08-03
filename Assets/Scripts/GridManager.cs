@@ -5,12 +5,12 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
 
-    public GridScriptableObject grid_scriptable_object;
+    public GridSystemScriptableObject grid_scriptable_object;
     public GridObject tile_object;
 
     void Awake()
     {
-        grid_scriptable_object.grid_system_object = new GridSys<GridObject>(grid_scriptable_object.width, grid_scriptable_object.depth, grid_scriptable_object.cell_size, grid_scriptable_object.origin_position,
+        grid_scriptable_object.grid_system_object = new GridSys<GridObject>(grid_scriptable_object.x, grid_scriptable_object.z, grid_scriptable_object.cell_size, grid_scriptable_object.origin_position,
                                                     (GridSys<GridObject> grid, int x, int y, int z) => CreateGridObject(new Vector3(x, y, z), grid));
 
     }
@@ -28,14 +28,14 @@ public class GridManager : MonoBehaviour
     private GridObject CreateGridObject(Vector3 _position, GridSys<GridObject> _grid)
     {
         GridObject tile = ScriptableObject.Instantiate(tile_object);
-        return tile.Init(_position, grid_scriptable_object.grid_system_object);
+        return tile.Init(_position, grid_scriptable_object.grid_system_object, tile.original_material.color);
     }
     void InstantiateGridObjects()
     {
         GridObject grid_object;
-        for (int x = 0; x < grid_scriptable_object.width; x++)
+        for (int x = 0; x < grid_scriptable_object.x; x++)
         {
-            for (int z = 0; z < grid_scriptable_object.depth; z++)
+            for (int z = 0; z < grid_scriptable_object.z; z++)
             {
                 GameObject spawn_object = Instantiate(tile_object.game_object);
                 spawn_object.transform.position = grid_scriptable_object.grid_system_object.GetWorldPosition(x, z);

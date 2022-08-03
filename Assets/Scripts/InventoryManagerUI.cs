@@ -31,13 +31,12 @@ public class InventoryManagerUI : MonoBehaviour
     private void Awake()
     {
         player_component = player.GetComponent<Player>();
-        player_component.SetInventory(new Inventory());
+        player_component.SetBuildingsInventory(new Inventory());
     }
     // Start is called before the first frame update
     void Start()
     {
-        item_button = item_slot_prefab.GetComponent<Button>();
-        item_button.onClick.AddListener(() => { GetItemInfo(); });
+
         //inventory_scriptable_object.buildings_inventory.AddItem(items_objects[0]);
 
         //AddItem(items_objects[0]);
@@ -65,7 +64,7 @@ public class InventoryManagerUI : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        foreach (BuildingScriptableObject item_scriptable_object in player_component.GetInventory().GetItems())
+        foreach (BuildingScriptableObject item_scriptable_object in player_component.GetBuildingsInventory().GetItems())
         {
             AddItem(item_scriptable_object);
         }
@@ -100,13 +99,14 @@ public class InventoryManagerUI : MonoBehaviour
     {
         foreach (BuildingScriptableObject item_scriptable_object in items_objects)
         {
-            player_component.GetInventory().AddItem(item_scriptable_object);
+            player_component.GetBuildingsInventory().AddItem(item_scriptable_object);
 
         }
     }
 
     public void BuildableClicked(Buildable buildable)
     {
+
         buildable.GetBuildingData().GetInventory().AddItem(buildable.GetBuildingData());
         Debug.Log("Buildable clicked From UI manager");
         building_info_panel.SetActive(true);
@@ -122,6 +122,9 @@ public class InventoryManagerUI : MonoBehaviour
             item_slot.GetComponent<Item>().ItemScriptableObject = item_scriptable_object;
             item_slot.GetComponent<Item>().SetItem();
         }
+
+
+        //buildable.DestroyObject();
     }
 
 

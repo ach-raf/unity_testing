@@ -4,13 +4,13 @@ using UnityEngine;
 
 
 
-[CreateAssetMenu(fileName = "Grid ScriptableObject", menuName = "Grid/Grid ScriptableObject", order = 0)]
-public class GridScriptableObject : ScriptableObject
+[CreateAssetMenu(fileName = "GridSystem ScriptableObject", menuName = "Grid/GridSystem ScriptableObject", order = 0)]
+public class GridSystemScriptableObject : ScriptableObject
 {
     public new string name;
-    public int width; //x
+    public int x; //width
     public int y = 0;
-    public int depth; //z
+    public int z; //height or depth
 
     public float cell_size = 5;
 

@@ -8,14 +8,17 @@ public class BuildingManager : MonoBehaviour
     //public BuildingScriptableObject[] building_objects;
 
     [SerializeField] LayerMask ground_mask;
+    [SerializeField] LayerMask buildings_mask;
 
     [SerializeField] GameObject buildings_holder;
 
     public PlayerControlls playerControlls;
-    public GridScriptableObject grid_scriptable_object;
+    public GridSystemScriptableObject grid_scriptable_object;
     public BuildingScriptableObject selected_building_object;
     public Material preview_material;
     private GameObject preview_object = null;
+    private IClickable clicked_building_object = null;
+    private IClickable clicked_ground_object = null;
 
 
     private void Awake()
@@ -53,35 +56,36 @@ public class BuildingManager : MonoBehaviour
         if (playerControlls.Player.Fire.triggered)
         {
             Debug.Log("Fire");
-
-            /*mouseHit = CastRay();
-            if (mouseHit.collider != null)
+            clicked_building_object = MouseOperations.GetClickedObject(buildings_mask);
+            if (clicked_building_object != null)
             {
-                Debug.Log(mouseHit.collider.name);
-            }*/
-            IClickable clicked_object = MouseOperations.GetClickedObject();
-            if (clicked_object != null)
-            {
-                clicked_object.SetColor(Color.red);
-                if (clicked_object.GetGameObject().GetComponent<Buildable>())
+                if (clicked_building_object.GetGameObject().GetComponent<Buildable>())
                 {
-                    Buildable buildable_component = clicked_object.GetGameObject().GetComponent<Buildable>();
-                    buildable_component.click();
+                    clicked_building_object.GetGameObject().GetComponent<Buildable>().click();
 
                 }
-                //Debug.Log(string.Format("ClickedObject get transform position, {0}", clicked_object.GetTransform().position));
-                InstantiateBuilding(clicked_object);
-
-                //InstantiateBuilding(clicked_object);
-                //InstantiateBuilding();
+                return;
             }
+
+            clicked_ground_object = MouseOperations.GetClickedObject(ground_mask);
+            if (clicked_ground_object == null)
+            {
+                Debug.Log("clicked_ground_object is null");
+            }
+
+            if (clicked_ground_object != null)
+            {
+                clicked_ground_object.SetColor(Color.red);
+                InstantiateBuilding(clicked_ground_object);
+            }
+
+
 
             IPhysics physics_object = MouseOperations.GetPhysicsObject();
             if (physics_object != null)
             {
                 physics_object.UpdateVelocity(new Vector3(0, 50, 0));
             }
-
 
         }
         if (playerControlls.Player.Move.triggered)
@@ -91,10 +95,15 @@ public class BuildingManager : MonoBehaviour
         if (playerControlls.Player.Interact.triggered)
         {
             Debug.Log("Interact");
-            //button_click();
-            IClickable clicked_object = MouseOperations.GetClickedObject();
-            if (clicked_object != null)
+            clicked_building_object = MouseOperations.GetClickedObject(buildings_mask);
+            if (clicked_building_object != null)
             {
+                if (clicked_building_object.GetGameObject().GetComponent<Buildable>())
+                {
+                    clicked_building_object.GetGameObject().GetComponent<Buildable>().DestroyBuilding(grid_scriptable_object);
+
+                }
+                return;
                 //clicked_object.SetColor(Color.green);
             }
         }
@@ -111,7 +120,7 @@ public class BuildingManager : MonoBehaviour
             preview_postion = MouseOperations.GroundMousePosition(ground_mask).point;
             preview_postion.y = 5;
         }
-        preview_object = Instantiate(selected_building_object.prefab, preview_postion, Quaternion.identity);
+        preview_object = Instantiate(selected_building_object.gameObject, preview_postion, Quaternion.identity);
         preview_object.GetComponentInChildren<Renderer>().material = preview_material;
     }
     void BuildableDestoryed(Buildable buildable_object)
@@ -122,8 +131,9 @@ public class BuildingManager : MonoBehaviour
 
             GridObject update_grid_object = grid_scriptable_object.grid_system_object.GetGridObject(item.Item1, item.Item2);
             update_grid_object.SetOccupied(false);
-            update_grid_object.SetColor(update_grid_object.original_color);
-            update_grid_object.building_data = null;
+            //update_grid_object.SetColor(update_grid_object.original_color);
+            update_grid_object.SetMaterial(update_grid_object.original_material);
+            update_grid_object.SetBuildingData(null);
             grid_scriptable_object.grid_system_object.SetValue(item.Item1, item.Item2, update_grid_object);
         }
     }
@@ -139,7 +149,7 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
-            IClickable clicked_object = MouseOperations.GetClickedObject();
+            IClickable clicked_object = MouseOperations.GetClickedObject(ground_mask);
             if (clicked_object != null)
             {
                 pos = clicked_object.GetTransform().position;
@@ -158,7 +168,7 @@ public class BuildingManager : MonoBehaviour
             DestroyPreview();
             BuildingScriptableObject building_ScriptableObject = ScriptableObject.Instantiate(selected_building_object);
             List<(int, int)> _list = building_ScriptableObject.GetBuildingAreaList(pos);
-            if (x + building_ScriptableObject.width > grid_scriptable_object.width || z + building_ScriptableObject.height > grid_scriptable_object.depth)
+            if (x + building_ScriptableObject.width > grid_scriptable_object.x || z + building_ScriptableObject.height > grid_scriptable_object.z)
             {
                 Debug.Log("Cant Build Here, DestroyPreview()");
                 return;
@@ -177,9 +187,9 @@ public class BuildingManager : MonoBehaviour
             if (can_build)
             {
                 building_ScriptableObject.SetBuildingData(pos, building_ScriptableObject.width, building_ScriptableObject.height, new Inventory());
-                building_ScriptableObject.prefab = Instantiate(building_ScriptableObject.prefab, building_ScriptableObject.transform_position, Quaternion.identity);
-                building_ScriptableObject.prefab.transform.SetParent(buildings_holder.transform);
-                building_ScriptableObject.prefab.GetComponentInChildren<Buildable>().SetBuildingData(building_ScriptableObject);
+                building_ScriptableObject.gameObject = Instantiate(building_ScriptableObject.gameObject, building_ScriptableObject.transform_position, Quaternion.identity);
+                building_ScriptableObject.gameObject.transform.SetParent(buildings_holder.transform);
+                building_ScriptableObject.gameObject.GetComponentInChildren<Buildable>().SetBuildingData(building_ScriptableObject);
 
                 //building_ScriptableObject.prefab.GetComponent<Buildable>().SetUpPanel(canvas, current_camera);
 
@@ -188,7 +198,7 @@ public class BuildingManager : MonoBehaviour
                     GridObject update_grid_object = grid_scriptable_object.grid_system_object.GetGridObject(item.Item1, item.Item2);
                     update_grid_object.SetOccupied(true);
                     update_grid_object.SetColor(Color.grey);
-                    update_grid_object.building_data = building_ScriptableObject;
+                    update_grid_object.SetBuildingData(building_ScriptableObject);
                     grid_scriptable_object.grid_system_object.SetValue(item.Item1, item.Item2, update_grid_object);
                 }
             }

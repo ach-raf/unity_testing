@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   name: House 2
-  prefab: {fileID: 2884585343781280986, guid: ae83e8d078c80b148a0ac8cdd93cec0b, type: 3}
-  ItemImage: {fileID: 21300000, guid: b0d655bb5f460604cbf510c8849201b2, type: 3}
+  gameObject: {fileID: 2884585343781280986, guid: ae83e8d078c80b148a0ac8cdd93cec0b, type: 3}
+  ItemImage: {fileID: 21300000, guid: ce1d0a847e0841842a6d807bd5bbd975, type: 3}
   quantity: 1
   cell_size: 5
-  offset: {x: -2.5, y: 2.5, z: 2.5}
-  id_building: 0
   width: 3
   height: 3
+  offset: {x: -2.5, y: 2.5, z: 2.5}
+  id_building: 0
   position: {x: 0, y: 0, z: 0}
   transform_position: {x: 0, y: 0, z: 0}
   ressource_type: 0

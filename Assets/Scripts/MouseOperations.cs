@@ -11,27 +11,13 @@ public static class MouseOperations
 
 
 
-    public static RaycastHit CastRay()
-    {
-        Vector3 mousePosFar = Mouse.current.position.ReadValue();
-        mousePosFar.z = Camera.main.farClipPlane;
 
-        Vector3 mousePosNear = Mouse.current.position.ReadValue();
-        mousePosNear.z = Camera.main.nearClipPlane;
 
-        Vector3 WorldPosFar = Camera.main.ScreenToWorldPoint(mousePosFar);
-        Vector3 WorldPosNear = Camera.main.ScreenToWorldPoint(mousePosNear);
-
-        RaycastHit hit;
-        Physics.Raycast(WorldPosNear, WorldPosFar - WorldPosNear, out hit);
-        return hit;
-    }
-
-    public static IClickable GetClickedObject()
+    public static IClickable GetClickedObject(LayerMask ground_mask)
     {
         try
         {
-            RaycastHit hit = CastRay();
+            RaycastHit hit = GroundMousePosition(ground_mask);
             if (hit.collider != null)
             {
                 IClickable clicked_object = hit.collider.GetComponent<IClickable>();
@@ -100,6 +86,21 @@ public static class MouseOperations
 
         }
         return ground_ray_hit;
+    }
+    public static RaycastHit CastRay()
+    {
+        Vector3 mousePosFar = Mouse.current.position.ReadValue();
+        mousePosFar.z = Camera.main.farClipPlane;
+
+        Vector3 mousePosNear = Mouse.current.position.ReadValue();
+        mousePosNear.z = Camera.main.nearClipPlane;
+
+        Vector3 WorldPosFar = Camera.main.ScreenToWorldPoint(mousePosFar);
+        Vector3 WorldPosNear = Camera.main.ScreenToWorldPoint(mousePosNear);
+
+        RaycastHit hit;
+        Physics.Raycast(WorldPosNear, WorldPosFar - WorldPosNear, out hit);
+        return hit;
     }
 
 

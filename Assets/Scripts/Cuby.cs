@@ -45,4 +45,8 @@ public class Cuby : MonoBehaviour, IClickable
     {
         rigidBody.velocity = new Vector3(_x, _y, _z);
     }*/
+    void OnMouseDown()
+    {
+        Debug.Log("Mouse Down Cuby");
+    }
 }

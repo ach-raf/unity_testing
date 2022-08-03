@@ -26,7 +26,11 @@ public class Item : MonoBehaviour
     }
     public void ItemClicked()
     {
+        // set at the inspector on the item panel
         Debug.Log(item_scriptable_object.name);
+        //todo
+        //buildable.GetTransform().parent.gameObject.SetActive(true);
+
         EventManager.OnInventoryItemClicked(item_scriptable_object);
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Tile ScriptAbleObject", menuName = "Tile/Tile ScriptableObject", order = 0)]
 public class GridObject : ScriptableObject
 {
-    public BuildingScriptableObject building_data;
+    private BuildingScriptableObject building_data;
     public GameObject game_object;
     private MeshRenderer _mesh_renderer;
     private Vector3 position;
@@ -15,16 +15,18 @@ public class GridObject : ScriptableObject
     private bool occupied;
 
     public Color original_color;
+    public Material original_material;
 
     public float width = 1;
     public float height = 1;
     public float cell_size = 5;
 
 
-    public GridObject Init(Vector3 _position, GridSys<GridObject> _grid)
+    public GridObject Init(Vector3 _position, GridSys<GridObject> _grid, Color _original_color)
     {
         position = _position;
         grid = _grid;
+        original_color = _original_color;
         return this;
     }
 
@@ -43,6 +45,15 @@ public class GridObject : ScriptableObject
 
 
     #region Getters and Setters
+    public void SetMaterial(Material _material)
+    {
+        _mesh_renderer.material = _material;
+    }
+
+    public Material GetMaterial()
+    {
+        return _mesh_renderer.material;
+    }
     public void SetPosition(Vector3 _position)
     {
         position = _position;
@@ -80,6 +91,20 @@ public class GridObject : ScriptableObject
     public GameObject GetGameObject()
     {
         return game_object;
+    }
+    public void EmptyTileObject()
+    {
+        game_object = null;
+        occupied = false;
+        SetColor(original_color);
+    }
+    public BuildingScriptableObject GetBuildingData()
+    {
+        return building_data;
+    }
+    public void SetBuildingData(BuildingScriptableObject _building_data)
+    {
+        building_data = _building_data;
     }
 
     #endregion
