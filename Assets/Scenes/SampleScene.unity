@@ -556,8 +556,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e60d850fb067f4fa23b4d84c5ff87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement_speed: 20
-  movement_time: 20
+  movement_speed: 2
+  movement_time: -2
+  move_input: {x: 0, y: 0, z: 0}
 --- !u!224 &839629587 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 112949893054926745, guid: 7022e4904a7feac4dbad067fb2d43570, type: 3}

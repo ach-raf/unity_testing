@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
     private PlayerControlls playerController;
     [SerializeField] public float movement_speed = 10f;
     [SerializeField] public float movement_time = 10f;
+    [SerializeField] public Vector3 move_input;
     private Vector3 new_position;
 
     private void Awake()
@@ -29,6 +30,15 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         new_position = transform.position;
+        playerController.Player.Move.performed += ctx =>
+        {
+            move_input = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, move_input.z);
+        };
+        playerController.Player.Move.canceled += ctx =>
+        {
+            move_input = new Vector3(ctx.ReadValue<Vector2>().x, ctx.ReadValue<Vector2>().y, move_input.z);
+        };
+
     }
 
     void FixedUpdate()
@@ -49,11 +59,10 @@ public class CameraController : MonoBehaviour
         {
             return;
         }
-        if (playerController.Player.Move.triggered)
-        {
-            Debug.Log("Move");
-            new_position += Vector2ToVector3((playerController.Player.Move.ReadValue<Vector2>() * movement_speed));
-        }
+
+        Debug.Log("Move");
+        new_position += Vector2ToVector3((move_input * movement_speed));
+
         transform.position = Vector3.Lerp(transform.position, new_position, Time.deltaTime);
     }
     public Vector3 Vector2ToVector3(Vector2 vector2)
