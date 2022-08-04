@@ -27,11 +27,12 @@ public class Cuby : MonoBehaviour, IClickable
     }
     public void click()
     {
-        Debug.Log("Clicked!");
+        Debug.Log("Cuby Clicked!");
+        EventManager.OnCubyClicked(this);
     }
     public void right_click()
     {
-        Debug.Log("Right Clicked!");
+        Debug.Log("Cuby Right Clicked!");
     }
     public GameObject GetGameObject()
     {

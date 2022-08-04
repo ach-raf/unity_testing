@@ -102,6 +102,26 @@ public static class MouseOperations
         Physics.Raycast(WorldPosNear, WorldPosFar - WorldPosNear, out hit);
         return hit;
     }
+    public static IClickable ClickedObject()
+    {
+        RaycastHit hit = CastRay();
+        if (hit.collider != null)
+        {
+            IClickable clicked_object = hit.collider.GetComponent<IClickable>();
+            if (clicked_object != null)
+            {
+                return clicked_object;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
 
 
 

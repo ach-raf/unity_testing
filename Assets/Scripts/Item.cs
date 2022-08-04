@@ -7,8 +7,8 @@ using TMPro;
 
 public class Item : MonoBehaviour
 {
-    private BuildingScriptableObject item_scriptable_object;
-    public BuildingScriptableObject ItemScriptableObject
+    private ItemScriptableObject item_scriptable_object;
+    public ItemScriptableObject ItemScriptableObject
     {
         get { return item_scriptable_object; }
         set { item_scriptable_object = value; }

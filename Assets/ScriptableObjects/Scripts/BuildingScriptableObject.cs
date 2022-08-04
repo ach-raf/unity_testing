@@ -8,6 +8,8 @@ using System;
 public class BuildingScriptableObject : ItemScriptableObject
 {
 
+    public GridSys<GridObject> grid_system_object;
+    public List<ResourcesScriptableObject> resources_generated;
     public float cell_size = 5;
     public int width;
     public int height;
@@ -28,13 +30,14 @@ public class BuildingScriptableObject : ItemScriptableObject
         Premium
     }
 
-    public void SetBuildingData(Vector3 _position, int _width, int _height, Inventory _inventory, RessourceType _ressource_type = RessourceType.None)
+    public void SetBuildingData(GridSys<GridObject> _grid_system_object, Vector3 _position, int _width, int _height, RessourceType _ressource_type = RessourceType.None)
     {
 
+        this.grid_system_object = _grid_system_object;
         this.id_building = id_counter;
         this.width = _width;
         this.height = _height;
-        this.inventory = _inventory;
+        this.inventory = new Inventory();
         this.transform_position = CalculateOffsetPosition(_position);
         this.position = new Vector3(_position.x, _position.y + 1, _position.z);
         this.name = $"({position.x}, {position.y}, {position.z})";
@@ -87,23 +90,13 @@ public class BuildingScriptableObject : ItemScriptableObject
         return result;
     }
 
-    void InstantiateBuilding(IClickable clicked_object)
-    {
-        /*BuildingScriptableObject building_object = ScriptableObject.Instantiate(this);
-        GameObject selected_object = PositionHelper.GetHitGameObject();
-        IClickable clicked_object = selected_object.GetComponentInParent<IClickable>();
-        Vector3 _pos = clicked_object.GetTransform().position;
-        building_object.SetBuildingData(_pos, width, height);
-        GameObject spawn_building = Instantiate(building_object.game_object, building_object.transform_position, Quaternion.identity);*/
-
-        BuildingScriptableObject building_object = ScriptableObject.Instantiate(this);
-        Vector3 _pos = clicked_object.GetTransform().position;
-        building_object.SetBuildingData(_pos, width, height, inventory);
-        GameObject spawn_building = Instantiate(building_object.gameObject, building_object.transform_position, Quaternion.identity);
-    }
     public Inventory GetInventory()
     {
         return inventory;
+    }
+    public void SetInventory(Inventory _inventory)
+    {
+        inventory = _inventory;
     }
     public List<(int, int)> Buildable_list(Vector3 starting_position, GridSystemScriptableObject grid_object)
     {
@@ -126,15 +119,24 @@ public class BuildingScriptableObject : ItemScriptableObject
         return result;
     }
 
-    public void DestroyBuilding(GridSystemScriptableObject grid_object)
+    public void DestroyBuilding()
     {
 
         List<(int, int)> _list = GetBuildingAreaList(position);
         for (int i = 0; i < _list.Count; i += 1)
         {
-            GridObject tile = grid_object.grid_system_object.GetGridObject(_list[i].Item1, _list[i].Item2);
+            GridObject tile = grid_system_object.GetGridObject(_list[i].Item1, _list[i].Item2);
             tile.EmptyTileObject();
-            grid_object.grid_system_object.SetValue(tile.GetPosition(), tile);
+            grid_system_object.SetValue(tile.GetPosition(), tile);
+        }
+
+    }
+    public IEnumerator StartProcessingResources()
+    {
+        yield return new WaitForSeconds(5);
+        foreach (var resource in resources_generated)
+        {
+            inventory.AddItem(resource);
         }
 
     }

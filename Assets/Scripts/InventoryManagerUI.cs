@@ -79,7 +79,7 @@ public class InventoryManagerUI : MonoBehaviour
             }
         }
     }
-    public BuildingScriptableObject GetItem(BuildingScriptableObject item_scriptable_object)
+    public ItemScriptableObject GetItem(BuildingScriptableObject item_scriptable_object)
     {
         foreach (Transform child in inventory_panel.transform)
         {
@@ -107,7 +107,8 @@ public class InventoryManagerUI : MonoBehaviour
     public void BuildableClicked(Buildable buildable)
     {
 
-        buildable.GetBuildingData().GetInventory().AddItem(buildable.GetBuildingData());
+        //buildable.GetBuildingData().GetInventory().AddItem(buildable.GetBuildingData());
+        buildable.GetBuildingData().StartProcessingResources();
         Debug.Log("Buildable clicked From UI manager");
         building_info_panel.SetActive(true);
         //building_info.GetComponent<BuildingScriptableObject>()..SetBuildingData(buildable.GetBuildingData());
@@ -125,6 +126,21 @@ public class InventoryManagerUI : MonoBehaviour
 
 
         //buildable.DestroyObject();
+    }
+
+    public void RefreshBuildingPanel(Buildable buildable)
+    {
+        building_info_panel.SetActive(true);
+        foreach (Transform child in building_info.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (BuildingScriptableObject item_scriptable_object in buildable.GetBuildingData().GetInventory().GetItems())
+        {
+            GameObject item_slot = Instantiate(item_slot_prefab, building_info.transform);
+            item_slot.GetComponent<Item>().ItemScriptableObject = item_scriptable_object;
+            item_slot.GetComponent<Item>().SetItem();
+        }
     }
 
 

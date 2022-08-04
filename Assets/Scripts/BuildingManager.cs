@@ -14,11 +14,10 @@ public class BuildingManager : MonoBehaviour
 
     public PlayerControlls playerControlls;
     public GridSystemScriptableObject grid_scriptable_object;
-    public BuildingScriptableObject selected_building_object;
+    public ItemScriptableObject selected_building_object;
     public Material preview_material;
     private GameObject preview_object = null;
-    private IClickable clicked_building_object = null;
-    private IClickable clicked_ground_object = null;
+    private IClickable clicked_object;
 
 
     private void Awake()
@@ -30,6 +29,7 @@ public class BuildingManager : MonoBehaviour
     {
         playerControlls.Enable();
         EventManager.InventoryItemClicked += InventoryItemClicked;
+        EventManager.CubyClicked += CubyClicked;
 
 
     }
@@ -37,6 +37,8 @@ public class BuildingManager : MonoBehaviour
     {
         playerControlls.Disable();
         EventManager.InventoryItemClicked -= InventoryItemClicked;
+        EventManager.CubyClicked -= CubyClicked;
+
 
     }
 
@@ -56,55 +58,23 @@ public class BuildingManager : MonoBehaviour
         if (playerControlls.Player.Fire.triggered)
         {
             Debug.Log("Fire");
-            clicked_building_object = MouseOperations.GetClickedObject(buildings_mask);
-            if (clicked_building_object != null)
+            clicked_object = MouseOperations.ClickedObject();
+            if (clicked_object != null)
             {
-                if (clicked_building_object.GetGameObject().GetComponent<Buildable>())
-                {
-                    clicked_building_object.GetGameObject().GetComponent<Buildable>().click();
-
-                }
+                clicked_object.click();
                 return;
             }
 
-            clicked_ground_object = MouseOperations.GetClickedObject(ground_mask);
-            if (clicked_ground_object == null)
-            {
-                Debug.Log("clicked_ground_object is null");
-            }
-
-            if (clicked_ground_object != null)
-            {
-                clicked_ground_object.SetColor(Color.red);
-                InstantiateBuilding(clicked_ground_object);
-            }
-
-
-
-            IPhysics physics_object = MouseOperations.GetPhysicsObject();
-            if (physics_object != null)
-            {
-                physics_object.UpdateVelocity(new Vector3(0, 50, 0));
-            }
-
-        }
-        if (playerControlls.Player.Move.triggered)
-        {
-            Debug.Log("Move");
         }
         if (playerControlls.Player.Interact.triggered)
         {
             Debug.Log("Interact");
-            clicked_building_object = MouseOperations.GetClickedObject(buildings_mask);
-            if (clicked_building_object != null)
-            {
-                if (clicked_building_object.GetGameObject().GetComponent<Buildable>())
-                {
-                    clicked_building_object.GetGameObject().GetComponent<Buildable>().DestroyBuilding(grid_scriptable_object);
+            clicked_object = MouseOperations.ClickedObject();
 
-                }
+            if (clicked_object != null)
+            {
+                clicked_object.right_click();
                 return;
-                //clicked_object.SetColor(Color.green);
             }
         }
     }
@@ -166,7 +136,7 @@ public class BuildingManager : MonoBehaviour
         else
         {
             DestroyPreview();
-            BuildingScriptableObject building_ScriptableObject = ScriptableObject.Instantiate(selected_building_object);
+            BuildingScriptableObject building_ScriptableObject = (BuildingScriptableObject)ScriptableObject.Instantiate(selected_building_object);
             List<(int, int)> _list = building_ScriptableObject.GetBuildingAreaList(pos);
             if (x + building_ScriptableObject.width > grid_scriptable_object.x || z + building_ScriptableObject.height > grid_scriptable_object.z)
             {
@@ -186,7 +156,7 @@ public class BuildingManager : MonoBehaviour
             }
             if (can_build)
             {
-                building_ScriptableObject.SetBuildingData(pos, building_ScriptableObject.width, building_ScriptableObject.height, new Inventory());
+                building_ScriptableObject.SetBuildingData(grid_scriptable_object.grid_system_object, pos, building_ScriptableObject.width, building_ScriptableObject.height);
                 building_ScriptableObject.gameObject = Instantiate(building_ScriptableObject.gameObject, building_ScriptableObject.transform_position, Quaternion.identity);
                 building_ScriptableObject.gameObject.transform.SetParent(buildings_holder.transform);
                 building_ScriptableObject.gameObject.GetComponentInChildren<Buildable>().SetBuildingData(building_ScriptableObject);
@@ -216,10 +186,16 @@ public class BuildingManager : MonoBehaviour
             preview_object = null;
         }
     }
-    public void InventoryItemClicked(BuildingScriptableObject item_scriptable_object)
+    public void InventoryItemClicked(ItemScriptableObject item_scriptable_object)
     {
         selected_building_object = item_scriptable_object;
         preview_building();
+    }
+
+    public void CubyClicked(Cuby cuby_component)
+    {
+        IClickable cuby_clickable = cuby_component.GetComponent<IClickable>();
+        InstantiateBuilding(cuby_clickable);
     }
 
 

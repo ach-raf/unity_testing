@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class Buildable : Cuby, IClickable, IDestoryable
 {
     private GameObject _instantiated_panel;
-    private bool _panel_state = true;
 
     private MeshRenderer mesh_renderer;
     private Vector3 position;
@@ -48,8 +47,8 @@ public class Buildable : Cuby, IClickable, IDestoryable
     public new void right_click()
     {
         Debug.Log($"{building_data.name} right clicked");
-        _instantiated_panel.SetActive(_panel_state);
-        _panel_state = !_panel_state;
+        DestroyBuilding();
+        EventManager.OnBuildableRightClicked(this);
     }
 
     public void SetUpPanel(GameObject current_canvas, Camera current_camera)
@@ -64,13 +63,18 @@ public class Buildable : Cuby, IClickable, IDestoryable
         Destroy(_instantiated_panel);
 
     }
-    public void DestroyBuilding(GridSystemScriptableObject grid_object)
+    public void DestroyBuilding()
     {
         for (int i = 0; i < transform.parent.transform.childCount; i++)
         {
             Destroy(transform.parent.transform.GetChild(i).gameObject);
         }
-        building_data.DestroyBuilding(grid_object);
+        building_data.DestroyBuilding();
+    }
+
+    public IEnumerator StartProcessingResources()
+    {
+        yield return StartCoroutine(building_data.StartProcessingResources());
     }
 
 
