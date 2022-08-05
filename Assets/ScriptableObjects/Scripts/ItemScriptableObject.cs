@@ -9,6 +9,7 @@ public class ItemScriptableObject : ScriptableObject
     public new string name;
     public GameObject gameObject;
     public Sprite ItemImage;
+    public Inventory inventory;
     public int quantity;
     //private int max_quantity;
     //private bool stackable;

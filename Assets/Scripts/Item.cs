@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
+//ui element for inventory item
 public class Item : MonoBehaviour
 {
     private ItemScriptableObject item_scriptable_object;

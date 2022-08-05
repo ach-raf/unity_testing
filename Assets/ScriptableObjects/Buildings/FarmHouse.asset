@@ -17,6 +17,8 @@ MonoBehaviour:
   gameObject: {fileID: 3063246078014475324, guid: b6bb242d40ae4014c9a30115aaeb1387, type: 3}
   ItemImage: {fileID: 21300000, guid: 716f851f0cf333b47b8ca76294aa7e54, type: 3}
   quantity: 1
+  resources_generated:
+  - {fileID: 11400000, guid: 64c4f1fb341c54d48a20032a0be3d2fd, type: 2}
   cell_size: 5
   width: 3
   height: 3

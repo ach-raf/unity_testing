@@ -9,7 +9,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] public GameObject inventory_panel;
     [SerializeField] public GameObject building_info_panel;
     private PlayerControlls playerControlls;
-    private static int inventory_state = 0;
+    //private static int inventory_state = 0;
+    private bool inventory_state = true;
 
 
 
@@ -21,11 +22,15 @@ public class UiManager : MonoBehaviour
     private void OnEnable()
     {
         playerControlls.Enable();
+        EventManager.InventoryItemClicked += InventoryItemClicked;
+
 
     }
     private void OnDisable()
     {
         playerControlls.Disable();
+        EventManager.InventoryItemClicked -= InventoryItemClicked;
+
     }
     // Start is called before the first frame update
     void Start()
@@ -36,6 +41,11 @@ public class UiManager : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        if (playerControlls.Player.AddResource.triggered)
+        {
+            EventManager.OnDebugResourceAdded();
+            //StartCoroutine(buildable.GetBuildingData().StartProcessingResources());
+        }
         if (playerControlls.Player.CloseBuildingInfo.triggered)
         {
             building_info_panel.SetActive(false);
@@ -43,16 +53,17 @@ public class UiManager : MonoBehaviour
 
         if (playerControlls.Player.OpenInventory.triggered)
         {
-            if (inventory_state % 2 == 0)
-            {
-                inventory_panel.SetActive(true);
-                inventory_state++;
-            }
-            else
-            {
-                inventory_panel.SetActive(false);
-                inventory_state++;
-            }
+
+            inventory_panel.SetActive(inventory_state);
+            inventory_state = !inventory_state;
+
         }
+    }
+    public void InventoryItemClicked(ItemScriptableObject item_scriptable_object)
+    {
+        inventory_panel.SetActive(inventory_state);
+        inventory_state = !inventory_state;
+
+
     }
 }

@@ -20,6 +20,8 @@ public class GridObject : ScriptableObject
     public float width = 1;
     public float height = 1;
     public float cell_size = 5;
+    public int grid_x;
+    public int grid_z;
 
 
     public GridObject Init(Vector3 _position, GridSys<GridObject> _grid, Color _original_color)

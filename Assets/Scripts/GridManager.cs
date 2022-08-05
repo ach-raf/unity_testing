@@ -52,7 +52,10 @@ public class GridManager : MonoBehaviour
                 }
                 grid_object.original_color = grid_object.GetColor();
                 grid_object.SetOccupied(false);
+                grid_object.grid_x = x;
+                grid_object.grid_z = z;
                 grid_scriptable_object.grid_system_object.SetValue(x, z, grid_object);
+                spawn_object.GetComponent<Cuby>().SetGridObject(grid_object);
 
             }
         }

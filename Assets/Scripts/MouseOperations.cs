@@ -98,8 +98,15 @@ public static class MouseOperations
         Vector3 WorldPosFar = Camera.main.ScreenToWorldPoint(mousePosFar);
         Vector3 WorldPosNear = Camera.main.ScreenToWorldPoint(mousePosNear);
 
-        RaycastHit hit;
+        /*RaycastHit hit;
         Physics.Raycast(WorldPosNear, WorldPosFar - WorldPosNear, out hit);
+        return hit;*/
+
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue))
+        {
+
+        }
         return hit;
     }
     public static IClickable ClickedObject()
@@ -107,18 +114,24 @@ public static class MouseOperations
         RaycastHit hit = CastRay();
         if (hit.collider != null)
         {
-            IClickable clicked_object = hit.collider.GetComponent<IClickable>();
+            Debug.Log("Hit not null");
+            Debug.Log(hit.collider.gameObject.name);
+            IClickable clicked_object = hit.transform.GetComponent<IClickable>();
             if (clicked_object != null)
             {
+                Debug.Log("ClickedObject not null");
                 return clicked_object;
             }
             else
             {
+                Debug.Log("ClickedObject null");
+
                 return null;
             }
         }
         else
         {
+            Debug.Log("Hit null");
             return null;
         }
     }

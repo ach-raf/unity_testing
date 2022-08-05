@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class Cuby : MonoBehaviour, IClickable
 {
-    //public Rigidbody rigidBody;
-    // Start is called before the first frame update
-    void Start()
+    private GridObject grid_object;
+
+    public GridObject GetGridObject()
     {
-        //rigidBody = GetComponent<Rigidbody>();
+        return grid_object;
     }
-
-    // Update is called once per frame
-    void Update()
+    public void SetGridObject(GridObject _grid_object)
     {
-
+        grid_object = _grid_object;
     }
-
     public Transform GetTransform()
     {
         return transform;
@@ -49,5 +46,10 @@ public class Cuby : MonoBehaviour, IClickable
     void OnMouseDown()
     {
         Debug.Log("Mouse Down Cuby");
+    }
+    public void GetXZ(out int x, out int z)
+    {
+        x = grid_object.grid_x;
+        z = grid_object.grid_z;
     }
 }

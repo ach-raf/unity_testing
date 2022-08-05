@@ -80,6 +80,15 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AddResource"",
+                    ""type"": ""Button"",
+                    ""id"": ""68584118-0a7e-4dff-9a0a-0201f4cdba8f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -333,6 +342,17 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""CloseBuildingInfo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c8b725cd-8c87-4771-ac50-b7432e3900b1"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""AddResource"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -926,6 +946,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_OpenInventory = m_Player.FindAction("OpenInventory", throwIfNotFound: true);
         m_Player_CloseBuildingInfo = m_Player.FindAction("CloseBuildingInfo", throwIfNotFound: true);
+        m_Player_AddResource = m_Player.FindAction("AddResource", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1003,6 +1024,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_OpenInventory;
     private readonly InputAction m_Player_CloseBuildingInfo;
+    private readonly InputAction m_Player_AddResource;
     public struct PlayerActions
     {
         private @PlayerControlls m_Wrapper;
@@ -1013,6 +1035,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @OpenInventory => m_Wrapper.m_Player_OpenInventory;
         public InputAction @CloseBuildingInfo => m_Wrapper.m_Player_CloseBuildingInfo;
+        public InputAction @AddResource => m_Wrapper.m_Player_AddResource;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1040,6 +1063,9 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                 @CloseBuildingInfo.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseBuildingInfo;
                 @CloseBuildingInfo.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseBuildingInfo;
                 @CloseBuildingInfo.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCloseBuildingInfo;
+                @AddResource.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAddResource;
+                @AddResource.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAddResource;
+                @AddResource.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAddResource;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1062,6 +1088,9 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                 @CloseBuildingInfo.started += instance.OnCloseBuildingInfo;
                 @CloseBuildingInfo.performed += instance.OnCloseBuildingInfo;
                 @CloseBuildingInfo.canceled += instance.OnCloseBuildingInfo;
+                @AddResource.started += instance.OnAddResource;
+                @AddResource.performed += instance.OnAddResource;
+                @AddResource.canceled += instance.OnAddResource;
             }
         }
     }
@@ -1224,6 +1253,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnOpenInventory(InputAction.CallbackContext context);
         void OnCloseBuildingInfo(InputAction.CallbackContext context);
+        void OnAddResource(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

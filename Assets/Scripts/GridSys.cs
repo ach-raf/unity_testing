@@ -13,7 +13,7 @@ public class GridSys<TGenericType>
     private Vector3 origin_position;
     private TGenericType[,] grid_array;
 
-    private float click_error_tolerance = 1.5f;
+    private float click_error_tolerance = 10f;
 
 
 
@@ -41,7 +41,7 @@ public class GridSys<TGenericType>
     public void GetXZ(Vector3 world_position, out int x, out int z)
     {
 
-        int temp_x = Mathf.FloorToInt((world_position.x - origin_position.x) / cell_size);
+        /*int temp_x = Mathf.FloorToInt((world_position.x - origin_position.x) / cell_size);
         int temp_z = Mathf.FloorToInt((world_position.z - origin_position.z) / cell_size);
 
         if (world_position.x - click_error_tolerance <= temp_x || world_position.x - click_error_tolerance >= temp_x && world_position.z - click_error_tolerance <= temp_z || world_position.z - click_error_tolerance >= temp_z)
@@ -54,7 +54,9 @@ public class GridSys<TGenericType>
             x = -1;
             z = -1;
 
-        }
+        }*/
+        x = (int)world_position.x;
+        z = (int)world_position.z;
     }
 
     public TGenericType GetGridObject(Vector3 world_position)

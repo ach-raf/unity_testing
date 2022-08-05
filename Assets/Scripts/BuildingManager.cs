@@ -64,6 +64,10 @@ public class BuildingManager : MonoBehaviour
                 clicked_object.click();
                 return;
             }
+            else
+            {
+                Debug.Log("Clicked object null buildingManager");
+            }
 
         }
         if (playerControlls.Player.Interact.triggered)
@@ -109,24 +113,11 @@ public class BuildingManager : MonoBehaviour
     }
     void InstantiateBuilding(IClickable _clicked)
     {
-        Vector3 pos = Vector3.zero;
+        Vector3 pos = _clicked.GetTransform().position;
         bool can_build = true;
-        if (preview_object)
-        {
-
-            pos = preview_object.transform.position;
-            //IClickable clicked_object = grid_object;
-        }
-        else
-        {
-            IClickable clicked_object = MouseOperations.GetClickedObject(ground_mask);
-            if (clicked_object != null)
-            {
-                pos = clicked_object.GetTransform().position;
-
-            }
-        }
-        grid_scriptable_object.grid_system_object.GetXZ(_clicked.GetTransform().position, out int x, out int z);
+        //grid_scriptable_object.grid_system_object.GetXZ(_clicked.GetTransform().position, out int x, out int z);
+        int x = (int)(_clicked.GetTransform().position.x / 5) + 5;
+        int z = (int)(_clicked.GetTransform().position.z / 5) + 5;
         GridObject grid_object = grid_scriptable_object.grid_system_object.GetGridObject(x, z);
         pos = grid_object.GetTransformPosition();
         if (grid_object.GetOccupied())
@@ -195,7 +186,64 @@ public class BuildingManager : MonoBehaviour
     public void CubyClicked(Cuby cuby_component)
     {
         IClickable cuby_clickable = cuby_component.GetComponent<IClickable>();
-        InstantiateBuilding(cuby_clickable);
+        if (cuby_component.GetGridObject().GetOccupied())
+        {
+            return;
+        }
+
+        Vector3 position = cuby_component.GetTransform().position;
+        cuby_component.GetXZ(out int x, out int z);
+        Debug.Log("x: " + x + " z: " + z);
+        DestroyPreview();
+        BuildingScriptableObject building_ScriptableObject = (BuildingScriptableObject)ScriptableObject.Instantiate(selected_building_object);
+        List<(int, int)> _list = building_ScriptableObject.GetBuildingAreaList(x, z);
+        for (int i = x; i < x + building_ScriptableObject.width; i += 1)
+        {
+            for (int j = z; j < z + building_ScriptableObject.height; j += 1)
+            {
+                Debug.Log((i, j));
+            }
+        }
+        if (x + building_ScriptableObject.width > grid_scriptable_object.x || z + building_ScriptableObject.height > grid_scriptable_object.z)
+        {
+            Debug.Log("Cant Build Here, DestroyPreview()");
+            return;
+        }
+        bool can_build = true;
+        foreach (var item in _list)
+        {
+            GridObject update_grid_object = grid_scriptable_object.grid_system_object.GetGridObject(item.Item1, item.Item2);
+            if (update_grid_object.GetOccupied())
+            {
+                Debug.Log("Cant Build Here, update_grid_object");
+                can_build = false;
+                break;
+            }
+        }
+        if (can_build)
+        {
+            building_ScriptableObject.SetBuildingData(grid_scriptable_object.grid_system_object, position, building_ScriptableObject.width, building_ScriptableObject.height);
+            building_ScriptableObject.gameObject = Instantiate(building_ScriptableObject.gameObject, building_ScriptableObject.transform_position, Quaternion.identity);
+            building_ScriptableObject.gameObject.transform.SetParent(buildings_holder.transform);
+            building_ScriptableObject.gameObject.GetComponentInChildren<Buildable>().SetBuildingData(building_ScriptableObject);
+
+            //building_ScriptableObject.prefab.GetComponent<Buildable>().SetUpPanel(canvas, current_camera);
+
+            foreach (var item in _list)
+            {
+                GridObject update_grid_object = grid_scriptable_object.grid_system_object.GetGridObject(item.Item1, item.Item2);
+                update_grid_object.SetOccupied(true);
+                update_grid_object.SetColor(Color.grey);
+                update_grid_object.SetBuildingData(building_ScriptableObject);
+                grid_scriptable_object.grid_system_object.SetValue(item.Item1, item.Item2, update_grid_object);
+            }
+        }
+
+
+
+
+
+        //InstantiateBuilding(cuby_clickable);
     }
 
 

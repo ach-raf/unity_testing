@@ -78,7 +78,7 @@ public class IconScreenShotter : MonoBehaviour
 
 
         UnityEngine.Object prefab = LoadPrefabFromFile(prefabName);
-        GameObject prefabInstance = Instantiate(prefab, new Vector3(-5, -5, 5), Quaternion.identity, gameObject.transform) as GameObject;
+        GameObject prefabInstance = Instantiate(prefab, new Vector3(-5, -5, 5), gameObject.transform.rotation, gameObject.transform) as GameObject;
         prefabInstance.name = prefabName;
         itemsToScreenShot.Add(prefabInstance);
 

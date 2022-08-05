@@ -72,10 +72,7 @@ public class Buildable : Cuby, IClickable, IDestoryable
         building_data.DestroyBuilding();
     }
 
-    public IEnumerator StartProcessingResources()
-    {
-        yield return StartCoroutine(building_data.StartProcessingResources());
-    }
+
 
 
 

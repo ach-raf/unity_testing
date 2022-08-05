@@ -17,7 +17,7 @@ public class Inventory
     public void AddItem(ItemScriptableObject item)
     {
         items.Add(item);
-        EventManager.OnInventoryItemAdded();
+        EventManager.OnInventoryItemAdded(item);
     }
     public void RemoveItem(ItemScriptableObject item)
     {
@@ -192,13 +192,7 @@ public class Inventory
     }
     public void AddItemQuantity(ItemScriptableObject item, int quantity)
     {
-        foreach (ItemScriptableObject item_ in items)
-        {
-            if (item_.name == item.name)
-            {
-                item_.quantity += quantity;
-            }
-        }
+        AddItemQuantity(item.name, quantity);
     }
     public void AddItemQuantity(string name, int quantity)
     {
@@ -222,13 +216,7 @@ public class Inventory
     }
     public void RemoveItemQuantity(ItemScriptableObject item, int quantity)
     {
-        foreach (ItemScriptableObject item_ in items)
-        {
-            if (item_.name == item.name)
-            {
-                item_.quantity -= quantity;
-            }
-        }
+        RemoveItemQuantity(item.name, quantity);
     }
     public void RemoveItemQuantity(string name, int quantity)
     {

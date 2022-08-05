@@ -14,7 +14,6 @@ public class BuildingScriptableObject : ItemScriptableObject
     public int width;
     public int height;
     public Vector3 offset;
-    private Inventory inventory;
     public static int id_counter = 0;
     public int id_building;
 
@@ -89,6 +88,20 @@ public class BuildingScriptableObject : ItemScriptableObject
         }
         return result;
     }
+    public List<(int, int)> GetBuildingAreaList(int x, int z)
+    {
+
+        List<(int, int)> result = new List<(int, int)>();
+
+        for (int i = x; i < x + width; i += 1)
+        {
+            for (int j = z; j < z + height; j += 1)
+            {
+                result.Add((i, j));
+            }
+        }
+        return result;
+    }
 
     public Inventory GetInventory()
     {
@@ -133,11 +146,13 @@ public class BuildingScriptableObject : ItemScriptableObject
     }
     public IEnumerator StartProcessingResources()
     {
-        yield return new WaitForSeconds(5);
+        Debug.Log("Start processing resources");
+        yield return new WaitForSeconds(1);
         foreach (var resource in resources_generated)
         {
             inventory.AddItem(resource);
         }
+        Debug.Log("Finished processing resources");
 
     }
 
