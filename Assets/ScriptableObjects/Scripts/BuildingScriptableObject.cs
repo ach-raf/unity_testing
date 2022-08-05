@@ -148,11 +148,13 @@ public class BuildingScriptableObject : ItemScriptableObject
     {
         Debug.Log("Start processing resources");
         yield return new WaitForSeconds(1);
-        foreach (var resource in resources_generated)
+        foreach (ResourcesScriptableObject resource in resources_generated)
         {
             inventory.AddItem(resource);
         }
         Debug.Log("Finished processing resources");
+        EventManager.OnRefreshBuildingPanel();
+
 
     }
 

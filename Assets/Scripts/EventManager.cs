@@ -13,8 +13,6 @@ public static class EventManager
     public static event Action<Buildable> BuildableClicked;
     public static void OnBuildableClicked(Buildable buildable_component) => BuildableClicked?.Invoke(buildable_component);
 
-    public static event Action<Buildable> SelectedBuildable;
-    public static void OnSelectedBuildable(Buildable buildable_component) => SelectedBuildable?.Invoke(buildable_component);
 
     public static event Action<Buildable> BuildableRightClicked;
     public static void OnBuildableRightClicked(Buildable buildable_component) => BuildableRightClicked?.Invoke(buildable_component);
@@ -24,6 +22,9 @@ public static class EventManager
 
     public static event Action DebugResourceAdded;
     public static void OnDebugResourceAdded() => DebugResourceAdded?.Invoke();
+
+    public static event Action RefreshBuildingPanel;
+    public static void OnRefreshBuildingPanel() => RefreshBuildingPanel?.Invoke();
 
 
 

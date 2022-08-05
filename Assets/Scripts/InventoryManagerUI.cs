@@ -19,11 +19,10 @@ public class InventoryManagerUI : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.InventoryItemAdded += RefreshBuildingPanel;
+        EventManager.RefreshBuildingPanel += RefreshBuildingPanel;
         EventManager.InventoryItemAdded += RefreshInventory;
 
         EventManager.BuildableClicked += BuildableClicked;
-        EventManager.SelectedBuildable += SelectedBuildable;
         EventManager.DebugResourceAdded += DebugResourceAdded;
 
 
@@ -31,10 +30,12 @@ public class InventoryManagerUI : MonoBehaviour
     }
     void OnDisable()
     {
-        EventManager.InventoryItemAdded -= RefreshBuildingPanel;
+        EventManager.RefreshBuildingPanel -= RefreshBuildingPanel;
         EventManager.InventoryItemAdded -= RefreshInventory;
+
+
         EventManager.BuildableClicked -= BuildableClicked;
-        EventManager.SelectedBuildable -= SelectedBuildable;
+
         EventManager.DebugResourceAdded -= DebugResourceAdded;
 
 
@@ -119,30 +120,6 @@ public class InventoryManagerUI : MonoBehaviour
 
     public void BuildableClicked(Buildable buildable)
     {
-        EventManager.OnSelectedBuildable(buildable);
-        //buildable.GetBuildingData().GetInventory().AddItem(buildable.GetBuildingData());
-        //buildable.GetBuildingData().StartProcessingResources();
-        //StartCoroutine(buildable.GetBuildingData().StartProcessingResources());
-        Debug.Log("Buildable clicked From UI manager");
-        building_info_panel.SetActive(true);
-        //building_info.GetComponent<BuildingScriptableObject>()..SetBuildingData(buildable.GetBuildingData());
-
-        foreach (Transform child in building_info.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        foreach (ItemScriptableObject item_scriptable_object in buildable.GetBuildingData().GetInventory().GetItems())
-        {
-            GameObject item_slot = Instantiate(item_slot_prefab, building_info.transform);
-            item_slot.GetComponent<Item>().ItemScriptableObject = item_scriptable_object;
-            item_slot.GetComponent<Item>().SetItem();
-        }
-
-
-        //buildable.DestroyObject();
-    }
-    public void SelectedBuildable(Buildable buildable)
-    {
         selected_buildable = buildable;
         building_info_panel.SetActive(true);
         //building_info.GetComponent<BuildingScriptableObject>()..SetBuildingData(buildable.GetBuildingData());
@@ -159,48 +136,25 @@ public class InventoryManagerUI : MonoBehaviour
         }
     }
 
-    public void RefreshBuildingPanel(ItemScriptableObject building_data)
-    {
-        /*if (building_data.inventory != null)
-        {
-            building_info_panel.SetActive(true);
-            foreach (Transform child in building_info.transform)
-            {
-                Destroy(child.gameObject);
-            }
-            foreach (BuildingScriptableObject item_scriptable_object in building_data.inventory.GetItems())
-            {
-                GameObject item_slot = Instantiate(item_slot_prefab, building_info.transform);
-                item_slot.GetComponent<Item>().ItemScriptableObject = item_scriptable_object;
-                item_slot.GetComponent<Item>().SetItem();
-            }
-        }*/
-        Debug.Log("Building inventory inventory null");
-
-        if (building_data.inventory != null)
-        {
-            Debug.Log("Building inventory being refreshed");
-            building_info_panel.SetActive(false);
-
-            foreach (Transform child in building_info.transform)
-            {
-                Destroy(child.gameObject);
-            }
-            foreach (ItemScriptableObject item_scriptable_object in building_data.inventory.GetItems())
-            {
-                GameObject item_slot = Instantiate(item_slot_prefab, building_info.transform);
-                item_slot.GetComponent<Item>().ItemScriptableObject = item_scriptable_object;
-                item_slot.GetComponent<Item>().SetItem();
-            }
-            building_info_panel.SetActive(true);
-
-        }
-    }
 
     public void DebugResourceAdded()
     {
         StartCoroutine(selected_buildable.GetBuildingData().StartProcessingResources());
         //BuildableClicked(selected_buildable);
+    }
+    public void RefreshBuildingPanel()
+    {
+        Debug.Log("RefreshBuildingInventoryPanel");
+        foreach (Transform child in building_info.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (ItemScriptableObject item_scriptable_object in selected_buildable.GetBuildingData().GetInventory().GetItems())
+        {
+            GameObject item_slot = Instantiate(item_slot_prefab, building_info.transform);
+            item_slot.GetComponent<Item>().ItemScriptableObject = item_scriptable_object;
+            item_slot.GetComponent<Item>().SetItem();
+        }
     }
 
 
