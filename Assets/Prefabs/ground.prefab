@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8583622735154601927}
   - component: {fileID: 4489275278701372023}
   - component: {fileID: -5658562124492306000}
-  - component: {fileID: 2508863363900259083}
   m_Layer: 6
   m_Name: ground
   m_TagString: Untagged
@@ -30,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3201189558339663559}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0.0759, z: 0.1276}
-  m_LocalScale: {x: 5, y: 5.1515, z: 5.2555}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -95,7 +94,7 @@ BoxCollider:
   m_GameObject: {fileID: 3201189558339663559}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -111,17 +110,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2451e37f51b883408f4446c95e634a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!64 &2508863363900259083
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3201189558339663559}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}

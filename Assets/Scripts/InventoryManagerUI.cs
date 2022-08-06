@@ -121,6 +121,7 @@ public class InventoryManagerUI : MonoBehaviour
     public void BuildableClicked(Buildable buildable)
     {
         selected_buildable = buildable;
+        building_info_panel.transform.position = Camera.main.ScreenToViewportPoint(buildable.transform.position);
         building_info_panel.SetActive(true);
         //building_info.GetComponent<BuildingScriptableObject>()..SetBuildingData(buildable.GetBuildingData());
 
@@ -135,6 +136,7 @@ public class InventoryManagerUI : MonoBehaviour
             item_slot.GetComponent<Item>().SetItem();
         }
     }
+
 
 
     public void DebugResourceAdded()

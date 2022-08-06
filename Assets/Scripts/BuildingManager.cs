@@ -50,11 +50,7 @@ public class BuildingManager : MonoBehaviour
         {
             return;
         }
-        if (preview_object)
-        {
-            preview_object.transform.position = MouseOperations.GroundMousePosition(ground_mask).point;
-
-        }
+        ShowPreviewAtMousePosition();
         if (playerControlls.Player.Fire.triggered)
         {
             Debug.Log("Fire");
@@ -239,11 +235,20 @@ public class BuildingManager : MonoBehaviour
             }
         }
 
-
-
-
-
         //InstantiateBuilding(cuby_clickable);
+    }
+    public void ShowPreviewAtMousePosition()
+    {
+        if (preview_object)
+        {
+            Vector3 mouse_position = MouseOperations.GroundMousePosition(ground_mask).point;
+            int x = (int)mouse_position.x;
+            int z = (int)mouse_position.z;
+            int y = (int)mouse_position.y;
+            Vector3 snap_position = new Vector3(x, 2.5f, z);
+            preview_object.transform.position = snap_position;
+
+        }
     }
 
 

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2567332f76f02084bbedae88d1258d38, type: 3}
+  m_Name: SM_Bld_Barn_01
+  m_EditorClassIdentifier: 
+  id: 0
+  name: Barn 01
+  gameObject: {fileID: 7893463509963791311, guid: 158fad1c5fa02dd4580510d49bdcba87, type: 3}
+  ItemImage: {fileID: 21300000, guid: a267be29f9b447e4fa6b6d10955f6632, type: 3}
+  quantity: 1
+  resources_generated:
+  - {fileID: 11400000, guid: fc11e363e0b5aa54b8822bad74db8836, type: 2}
+  cell_size: 5
+  width: 3
+  height: 3
+  offset: {x: -2.5, y: 2.5, z: 2.5}
+  id_building: 0
+  position: {x: 0, y: 0, z: 0}
+  transform_position: {x: 0, y: 0, z: 0}
+  ressource_type: 0
