@@ -89,6 +89,15 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseZoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""6ab02227-5286-4f23-b44f-80b03d95ad0c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -353,6 +362,17 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""AddResource"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2bb8cc6-a970-4ad7-9ffb-0e97eda06af6"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""MouseZoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -947,6 +967,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         m_Player_OpenInventory = m_Player.FindAction("OpenInventory", throwIfNotFound: true);
         m_Player_CloseBuildingInfo = m_Player.FindAction("CloseBuildingInfo", throwIfNotFound: true);
         m_Player_AddResource = m_Player.FindAction("AddResource", throwIfNotFound: true);
+        m_Player_MouseZoom = m_Player.FindAction("MouseZoom", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1025,6 +1046,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_OpenInventory;
     private readonly InputAction m_Player_CloseBuildingInfo;
     private readonly InputAction m_Player_AddResource;
+    private readonly InputAction m_Player_MouseZoom;
     public struct PlayerActions
     {
         private @PlayerControlls m_Wrapper;
@@ -1036,6 +1058,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         public InputAction @OpenInventory => m_Wrapper.m_Player_OpenInventory;
         public InputAction @CloseBuildingInfo => m_Wrapper.m_Player_CloseBuildingInfo;
         public InputAction @AddResource => m_Wrapper.m_Player_AddResource;
+        public InputAction @MouseZoom => m_Wrapper.m_Player_MouseZoom;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1066,6 +1089,9 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                 @AddResource.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAddResource;
                 @AddResource.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAddResource;
                 @AddResource.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAddResource;
+                @MouseZoom.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseZoom;
+                @MouseZoom.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseZoom;
+                @MouseZoom.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseZoom;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1091,6 +1117,9 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                 @AddResource.started += instance.OnAddResource;
                 @AddResource.performed += instance.OnAddResource;
                 @AddResource.canceled += instance.OnAddResource;
+                @MouseZoom.started += instance.OnMouseZoom;
+                @MouseZoom.performed += instance.OnMouseZoom;
+                @MouseZoom.canceled += instance.OnMouseZoom;
             }
         }
     }
@@ -1254,6 +1283,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         void OnOpenInventory(InputAction.CallbackContext context);
         void OnCloseBuildingInfo(InputAction.CallbackContext context);
         void OnAddResource(InputAction.CallbackContext context);
+        void OnMouseZoom(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

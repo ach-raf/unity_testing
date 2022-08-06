@@ -568,6 +568,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement_speed: 60
   movement_time: 10
+  zoom_min_height: 10
+  zoom_max_height: 500
+  zoom_dampening: 2
+  zoom_speed: 1
+  zoom_step: 0.2
   move_input: {x: 0, y: 0, z: 0}
   inputSensitivity: 100
   mouse_sensitivity: 1
