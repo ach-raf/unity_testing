@@ -98,6 +98,15 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""BuildingRotate"",
+                    ""type"": ""Button"",
+                    ""id"": ""2c48d07b-beb0-45d6-8b0a-eeed7520e6ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -373,6 +382,17 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""MouseZoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8f902d93-3aa0-41b7-9d10-ed522d33eb83"",
+                    ""path"": ""<Keyboard>/#(R)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""BuildingRotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -968,6 +988,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         m_Player_CloseBuildingInfo = m_Player.FindAction("CloseBuildingInfo", throwIfNotFound: true);
         m_Player_AddResource = m_Player.FindAction("AddResource", throwIfNotFound: true);
         m_Player_MouseZoom = m_Player.FindAction("MouseZoom", throwIfNotFound: true);
+        m_Player_BuildingRotate = m_Player.FindAction("BuildingRotate", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1047,6 +1068,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CloseBuildingInfo;
     private readonly InputAction m_Player_AddResource;
     private readonly InputAction m_Player_MouseZoom;
+    private readonly InputAction m_Player_BuildingRotate;
     public struct PlayerActions
     {
         private @PlayerControlls m_Wrapper;
@@ -1059,6 +1081,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         public InputAction @CloseBuildingInfo => m_Wrapper.m_Player_CloseBuildingInfo;
         public InputAction @AddResource => m_Wrapper.m_Player_AddResource;
         public InputAction @MouseZoom => m_Wrapper.m_Player_MouseZoom;
+        public InputAction @BuildingRotate => m_Wrapper.m_Player_BuildingRotate;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1092,6 +1115,9 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                 @MouseZoom.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseZoom;
                 @MouseZoom.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseZoom;
                 @MouseZoom.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseZoom;
+                @BuildingRotate.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBuildingRotate;
+                @BuildingRotate.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBuildingRotate;
+                @BuildingRotate.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBuildingRotate;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1120,6 +1146,9 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                 @MouseZoom.started += instance.OnMouseZoom;
                 @MouseZoom.performed += instance.OnMouseZoom;
                 @MouseZoom.canceled += instance.OnMouseZoom;
+                @BuildingRotate.started += instance.OnBuildingRotate;
+                @BuildingRotate.performed += instance.OnBuildingRotate;
+                @BuildingRotate.canceled += instance.OnBuildingRotate;
             }
         }
     }
@@ -1284,6 +1313,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         void OnCloseBuildingInfo(InputAction.CallbackContext context);
         void OnAddResource(InputAction.CallbackContext context);
         void OnMouseZoom(InputAction.CallbackContext context);
+        void OnBuildingRotate(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

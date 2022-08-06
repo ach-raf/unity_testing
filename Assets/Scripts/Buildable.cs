@@ -13,10 +13,7 @@ public class Buildable : Cuby, IClickable, IDestoryable
     private void Awake()
     {
         mesh_renderer = GetComponent<MeshRenderer>();
-        //_instantiated_panel = Instantiate(panel);
-
     }
-
 
     public void SetMaterial(Material _material)
     {
@@ -25,8 +22,6 @@ public class Buildable : Cuby, IClickable, IDestoryable
 
     public void DestroyObject()
     {
-        //EventManager.OnBuildableDestroy(this);
-        //DestroyPanel();
         gameObject.transform.parent.gameObject.SetActive(false);
     }
 
@@ -41,12 +36,10 @@ public class Buildable : Cuby, IClickable, IDestoryable
 
     public new void click()
     {
-        Debug.Log("Click from buildable");
         EventManager.OnBuildableClicked(this);
     }
     public new void right_click()
     {
-        Debug.Log($"{building_data.name} right clicked");
         DestroyBuilding();
         EventManager.OnBuildableRightClicked(this);
     }

@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] public Vector3 move_input;
     [SerializeField] int inputSensitivity = 100;
     [SerializeField] public float mouse_sensitivity = 10f;
-    static float movementIncrementOverTime = 0;
+    //static float movementIncrementOverTime = 0;
 
     [SerializeField] public Vector2 mouse_move_input;
     private Vector3 new_position;
@@ -85,27 +85,15 @@ public class CameraController : MonoBehaviour
     public void PlayerMouseZoomPerformed(InputAction.CallbackContext context)
     {
         float scroll_value = -context.ReadValue<Vector2>().y;
-        if (Mathf.Abs(scroll_value) <= 0.1f)
-        {
-            return;
-        }
-        zoom_height = main_camera.transform.localPosition.y + scroll_value * zoom_step;
-        if (zoom_height < zoom_min_height)
-        {
-            zoom_height = zoom_min_height;
-        }
-        else if (zoom_height > zoom_max_height)
-        {
-            zoom_height = zoom_max_height;
-        }
-        if (zoom_height == zoom_min_height)
+        MouseZoomLogic(scroll_value);
+        /*if (zoom_height == zoom_min_height)
         {
             main_camera.fieldOfView -= 1;
         }
         else
         {
             main_camera.fieldOfView += 1;
-        }
+        }*/
 
 
     }
@@ -113,27 +101,7 @@ public class CameraController : MonoBehaviour
     {
         //mouse_move_input = context.ReadValue<Vector2>();
         float scroll_value = context.ReadValue<Vector2>().y;
-        if (Mathf.Abs(scroll_value) <= 0.1f)
-        {
-            return;
-        }
-        if (scroll_value > 0)
-        {
-            main_camera.fieldOfView -= 1;
-        }
-        else
-        {
-            main_camera.fieldOfView += 1;
-        }
-        zoom_height = main_camera.transform.localPosition.y + scroll_value * zoom_step;
-        if (zoom_height < zoom_min_height)
-        {
-            zoom_height = zoom_min_height;
-        }
-        else if (zoom_height > zoom_max_height)
-        {
-            zoom_height = zoom_max_height;
-        }
+        MouseZoomLogic(scroll_value);
 
     }
 
@@ -165,7 +133,7 @@ public class CameraController : MonoBehaviour
     public void HandleMouvementInput()
     {
         new_position += Vector2ToVector3((move_input));
-        transform.position = Vector3.Lerp(transform.position, new_position, (movement_speed * Time.deltaTime) / movement_time);
+        transform.position = Vector3.Lerp(transform.position, new_position, (inputSensitivity * movement_speed * Time.deltaTime) / movement_time);
     }
     public void Look()
     {
@@ -209,6 +177,23 @@ public class CameraController : MonoBehaviour
         //transform.position += movementDirection * movement_speed * Time.deltaTime;
         this.transform.Translate(movementDirection * movement_speed * Time.deltaTime, Space.World);
 
+    }
+
+    public void MouseZoomLogic(float scroll_value)
+    {
+        if (Mathf.Abs(scroll_value) <= 0.1f)
+        {
+            return;
+        }
+        zoom_height = main_camera.transform.localPosition.y + scroll_value * zoom_step;
+        if (zoom_height < zoom_min_height)
+        {
+            zoom_height = zoom_min_height;
+        }
+        else if (zoom_height > zoom_max_height)
+        {
+            zoom_height = zoom_max_height;
+        }
     }
 
     public void UpdateMouseZoom()

@@ -73,7 +73,6 @@ public class InventoryManagerUI : MonoBehaviour
     }
     public void RefreshInventory(ItemScriptableObject building_data)
     {
-        Debug.Log("RefreshInventory");
         foreach (Transform child in inventory_panel.transform)
         {
             Destroy(child.gameObject);
@@ -121,7 +120,8 @@ public class InventoryManagerUI : MonoBehaviour
     public void BuildableClicked(Buildable buildable)
     {
         selected_buildable = buildable;
-        building_info_panel.transform.position = Camera.main.ScreenToViewportPoint(buildable.transform.position);
+        Vector2 building_panel_position = new Vector2(buildable.transform.position.x * 1.5f, buildable.transform.position.z * 3f);
+        building_info_panel.transform.position = building_panel_position;
         building_info_panel.SetActive(true);
         //building_info.GetComponent<BuildingScriptableObject>()..SetBuildingData(buildable.GetBuildingData());
 
@@ -146,7 +146,6 @@ public class InventoryManagerUI : MonoBehaviour
     }
     public void RefreshBuildingPanel()
     {
-        Debug.Log("RefreshBuildingInventoryPanel");
         foreach (Transform child in building_info.transform)
         {
             Destroy(child.gameObject);

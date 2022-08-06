@@ -13,7 +13,7 @@ public class GridSys<TGenericType>
     private Vector3 origin_position;
     private TGenericType[,] grid_array;
 
-    private float click_error_tolerance = 10f;
+    //private float click_error_tolerance = 10f;
 
 
 

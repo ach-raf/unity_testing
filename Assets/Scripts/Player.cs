@@ -1,19 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
     private Inventory buildings_inventory;
     private Inventory ressources_inventory;
-    // Start is called before the first frame update
-    void Start()
-    {
+    private PlayerControlls playerController;
 
+    private void Awake()
+    {
+        playerController = new PlayerControlls();
+    }
+    void OnEnable()
+    {
+        playerController.Enable();
+        playerController.Player.BuildingRotate.performed += BuildingRotatePerformed;
+        playerController.Player.BuildingRotate.canceled += BuildingRotateCanceled;
+    }
+    void OnDisable()
+    {
+        playerController.Player.BuildingRotate.performed -= BuildingRotatePerformed;
+        playerController.Player.BuildingRotate.canceled -= BuildingRotateCanceled;
+        playerController.Disable();
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
 
     }
@@ -33,5 +47,13 @@ public class Player : MonoBehaviour
     public Inventory GetRessourcesInventory()
     {
         return ressources_inventory;
+    }
+    public void BuildingRotatePerformed(InputAction.CallbackContext context)
+    {
+        EventManager.OnBuildingRotatePerformed();
+    }
+    public void BuildingRotateCanceled(InputAction.CallbackContext context)
+    {
+        //EventManager.OnBuildingRotatePerformed();
     }
 }

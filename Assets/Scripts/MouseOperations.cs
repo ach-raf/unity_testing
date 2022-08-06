@@ -114,24 +114,19 @@ public static class MouseOperations
         RaycastHit hit = CastRay();
         if (hit.collider != null)
         {
-            Debug.Log("Hit not null");
-            Debug.Log(hit.collider.gameObject.name);
+            //Debug.Log(hit.collider.gameObject.name);
             IClickable clicked_object = hit.transform.GetComponent<IClickable>();
             if (clicked_object != null)
             {
-                Debug.Log("ClickedObject not null");
                 return clicked_object;
             }
             else
             {
-                Debug.Log("ClickedObject null");
-
                 return null;
             }
         }
         else
         {
-            Debug.Log("Hit null");
             return null;
         }
     }

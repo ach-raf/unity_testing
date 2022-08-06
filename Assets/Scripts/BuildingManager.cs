@@ -30,6 +30,7 @@ public class BuildingManager : MonoBehaviour
         playerControlls.Enable();
         EventManager.InventoryItemClicked += InventoryItemClicked;
         EventManager.CubyClicked += CubyClicked;
+        EventManager.BuildingRotatePerformed += BuildingRotatePerformed;
 
 
     }
@@ -38,6 +39,7 @@ public class BuildingManager : MonoBehaviour
         playerControlls.Disable();
         EventManager.InventoryItemClicked -= InventoryItemClicked;
         EventManager.CubyClicked -= CubyClicked;
+        EventManager.BuildingRotatePerformed -= BuildingRotatePerformed;
 
 
     }
@@ -79,20 +81,7 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-    void preview_building(Vector3 preview_postion = default(Vector3))
-    {
-        if (preview_object)
-        {
-            Destroy(preview_object);
-        }
-        if (preview_postion == default(Vector3))
-        {
-            preview_postion = MouseOperations.GroundMousePosition(ground_mask).point;
-            preview_postion.y = 5;
-        }
-        preview_object = Instantiate(selected_building_object.gameObject, preview_postion, Quaternion.identity);
-        preview_object.GetComponentInChildren<Renderer>().material = preview_material;
-    }
+
     void BuildableDestoryed(Buildable buildable_object)
     {
         List<(int, int)> _list = buildable_object.GetBuildingData().GetBuildingAreaList(buildable_object.GetBuildingData().position);
@@ -107,76 +96,11 @@ public class BuildingManager : MonoBehaviour
             grid_scriptable_object.grid_system_object.SetValue(item.Item1, item.Item2, update_grid_object);
         }
     }
-    void InstantiateBuilding(IClickable _clicked)
-    {
-        Vector3 pos = _clicked.GetTransform().position;
-        bool can_build = true;
-        //grid_scriptable_object.grid_system_object.GetXZ(_clicked.GetTransform().position, out int x, out int z);
-        int x = (int)(_clicked.GetTransform().position.x / 5) + 5;
-        int z = (int)(_clicked.GetTransform().position.z / 5) + 5;
-        GridObject grid_object = grid_scriptable_object.grid_system_object.GetGridObject(x, z);
-        pos = grid_object.GetTransformPosition();
-        if (grid_object.GetOccupied())
-        {
-            Debug.Log("Cant Build Here, GetOccupied()");
-        }
-        else
-        {
-            DestroyPreview();
-            BuildingScriptableObject building_ScriptableObject = (BuildingScriptableObject)ScriptableObject.Instantiate(selected_building_object);
-            List<(int, int)> _list = building_ScriptableObject.GetBuildingAreaList(pos);
-            if (x + building_ScriptableObject.width > grid_scriptable_object.x || z + building_ScriptableObject.height > grid_scriptable_object.z)
-            {
-                Debug.Log("Cant Build Here, DestroyPreview()");
-                return;
-            }
 
-            foreach (var item in _list)
-            {
-                GridObject update_grid_object = grid_scriptable_object.grid_system_object.GetGridObject(item.Item1, item.Item2);
-                if (update_grid_object.GetOccupied())
-                {
-                    Debug.Log("Cant Build Here, update_grid_object");
-                    can_build = false;
-                    break;
-                }
-            }
-            if (can_build)
-            {
-                building_ScriptableObject.SetBuildingData(grid_scriptable_object.grid_system_object, pos, building_ScriptableObject.width, building_ScriptableObject.height);
-                building_ScriptableObject.gameObject = Instantiate(building_ScriptableObject.gameObject, building_ScriptableObject.transform_position, Quaternion.identity);
-                building_ScriptableObject.gameObject.transform.SetParent(buildings_holder.transform);
-                building_ScriptableObject.gameObject.GetComponentInChildren<Buildable>().SetBuildingData(building_ScriptableObject);
-
-                //building_ScriptableObject.prefab.GetComponent<Buildable>().SetUpPanel(canvas, current_camera);
-
-                foreach (var item in _list)
-                {
-                    GridObject update_grid_object = grid_scriptable_object.grid_system_object.GetGridObject(item.Item1, item.Item2);
-                    update_grid_object.SetOccupied(true);
-                    update_grid_object.SetColor(Color.grey);
-                    update_grid_object.SetBuildingData(building_ScriptableObject);
-                    grid_scriptable_object.grid_system_object.SetValue(item.Item1, item.Item2, update_grid_object);
-                }
-            }
-        }
-
-
-
-    }
-    void DestroyPreview()
-    {
-        if (preview_object)
-        {
-            //preview_object.GetComponent<Buildable>().DestroyPanel();
-            Destroy(preview_object);
-            preview_object = null;
-        }
-    }
     public void InventoryItemClicked(ItemScriptableObject item_scriptable_object)
     {
         selected_building_object = item_scriptable_object;
-        preview_building();
+        CreateBuildingPreview();
     }
 
     public void CubyClicked(Cuby cuby_component)
@@ -186,10 +110,15 @@ public class BuildingManager : MonoBehaviour
         {
             return;
         }
+        if (!preview_object)
+        {
+            return;
+        }
 
         Vector3 position = cuby_component.GetTransform().position;
         cuby_component.GetXZ(out int x, out int z);
         Debug.Log("x: " + x + " z: " + z);
+        Quaternion preview_object_rotation = preview_object.transform.rotation;
         DestroyPreview();
         BuildingScriptableObject building_ScriptableObject = (BuildingScriptableObject)ScriptableObject.Instantiate(selected_building_object);
         List<(int, int)> _list = building_ScriptableObject.GetBuildingAreaList(x, z);
@@ -219,7 +148,7 @@ public class BuildingManager : MonoBehaviour
         if (can_build)
         {
             building_ScriptableObject.SetBuildingData(grid_scriptable_object.grid_system_object, position, building_ScriptableObject.width, building_ScriptableObject.height);
-            building_ScriptableObject.gameObject = Instantiate(building_ScriptableObject.gameObject, building_ScriptableObject.transform_position, Quaternion.identity);
+            building_ScriptableObject.gameObject = Instantiate(building_ScriptableObject.gameObject, building_ScriptableObject.transform_position, preview_object_rotation);
             building_ScriptableObject.gameObject.transform.SetParent(buildings_holder.transform);
             building_ScriptableObject.gameObject.GetComponentInChildren<Buildable>().SetBuildingData(building_ScriptableObject);
 
@@ -235,7 +164,6 @@ public class BuildingManager : MonoBehaviour
             }
         }
 
-        //InstantiateBuilding(cuby_clickable);
     }
     public void ShowPreviewAtMousePosition()
     {
@@ -248,6 +176,43 @@ public class BuildingManager : MonoBehaviour
             Vector3 snap_position = new Vector3(x, 2.5f, z);
             preview_object.transform.position = snap_position;
 
+        }
+    }
+    void CreateBuildingPreview(Vector3 preview_postion = default(Vector3))
+    {
+        if (preview_object)
+        {
+            Destroy(preview_object);
+        }
+        if (preview_postion == default(Vector3))
+        {
+            preview_postion = MouseOperations.GroundMousePosition(ground_mask).point;
+            int x = (int)preview_postion.x;
+            int z = (int)preview_postion.z;
+            int y = (int)preview_postion.y;
+            preview_postion = new Vector3(x, 2.5f, z);
+
+        }
+        preview_object = Instantiate(selected_building_object.gameObject, preview_postion, Quaternion.identity);
+        preview_object.GetComponentInChildren<Renderer>().material = preview_material;
+    }
+
+    public void BuildingRotatePerformed()
+    {
+        if (preview_object)
+        {
+            preview_object.transform.Rotate(0, 90, 0);
+        }
+
+    }
+
+    void DestroyPreview()
+    {
+        if (preview_object)
+        {
+            //preview_object.GetComponent<Buildable>().DestroyPanel();
+            Destroy(preview_object);
+            preview_object = null;
         }
     }
 

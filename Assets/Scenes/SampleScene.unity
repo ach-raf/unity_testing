@@ -568,7 +568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement_speed: 60
   movement_time: 10
-  zoom_min_height: 10
+  zoom_min_height: 2
   zoom_max_height: 500
   zoom_dampening: 2
   zoom_speed: 1

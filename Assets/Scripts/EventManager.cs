@@ -26,6 +26,9 @@ public static class EventManager
     public static event Action RefreshBuildingPanel;
     public static void OnRefreshBuildingPanel() => RefreshBuildingPanel?.Invoke();
 
+    public static event Action BuildingRotatePerformed;
+    public static void OnBuildingRotatePerformed() => BuildingRotatePerformed?.Invoke();
+
 
 
 }
